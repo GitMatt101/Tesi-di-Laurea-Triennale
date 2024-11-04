@@ -127,10 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ClCompile Include="src\main\main.cpp" />
+    <ClCompile Include="src\main\shaders\impl\shadersManagerImpl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\main\lib.hpp" />
+    <ClInclude Include="src\main\shaders\api\shadersManager.hpp" />
+    <ClInclude Include="src\main\utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
