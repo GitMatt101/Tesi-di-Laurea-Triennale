@@ -1,5 +1,7 @@
 #include "lib.hpp"
 #include "shaders/api/shadersManager.hpp"
+#include "geometry/api/shapes.hpp"
+#include "geometry/api/geometry.hpp"
 
 int main()
 {

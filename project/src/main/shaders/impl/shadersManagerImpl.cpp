@@ -2,7 +2,7 @@
 #include "../../utils.hpp"
 
 ShadersManager::ShadersManager(char* vertexFile, char* fragmentFile) {
-	this->programId = -1;
+	this->programId = 0;
 	this->vertexFile = vertexFile;
 	this->fragmentFile = fragmentFile;
 }

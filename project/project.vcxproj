@@ -130,13 +130,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\main\geometry\impl\geometry.cpp" />
+    <ClCompile Include="src\main\geometry\impl\shapes.cpp" />
     <ClCompile Include="src\main\main.cpp" />
     <ClCompile Include="src\main\shaders\impl\shadersManagerImpl.cpp" />
+    <ClCompile Include="src\main\vao\impl\vaoInitializer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\main\geometry\api\geometry.hpp" />
+    <ClInclude Include="src\main\geometry\api\shapes.hpp" />
     <ClInclude Include="src\main\lib.hpp" />
     <ClInclude Include="src\main\shaders\api\shadersManager.hpp" />
     <ClInclude Include="src\main\utils.hpp" />
+    <ClInclude Include="src\main\vao\api\vaoInitializer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
