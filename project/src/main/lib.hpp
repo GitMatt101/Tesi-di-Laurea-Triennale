@@ -7,7 +7,6 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
-#include <map>
 #include <iostream>
 
 using namespace glm;

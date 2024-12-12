@@ -130,19 +130,23 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main\geometry\impl\geometry.cpp" />
-    <ClCompile Include="src\main\geometry\impl\shapes.cpp" />
-    <ClCompile Include="src\main\main.cpp" />
+    <ClCompile Include="src\main\geometry\impl\shapeBuilderImpl.cpp" />
+    <ClCompile Include="src\main\geometry\impl\shapeImpl.cpp" />
+    <ClCompile Include="src\main\geometry\impl\vertexImpl.cpp" />
+    <ClCompile Include="src\main\glut\impl\glutManagerImpl.cpp" />
     <ClCompile Include="src\main\shaders\impl\shadersManagerImpl.cpp" />
-    <ClCompile Include="src\main\vao\impl\vaoInitializer.cpp" />
+    <ClCompile Include="src\main\solver\impl\knapsackSolverImpl.cpp" />
+    <ClCompile Include="src\main\test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\main\geometry\api\geometry.hpp" />
-    <ClInclude Include="src\main\geometry\api\shapes.hpp" />
+    <ClInclude Include="src\main\geometry\api\shapeBuilder.hpp" />
+    <ClInclude Include="src\main\geometry\api\shape.hpp" />
+    <ClInclude Include="src\main\geometry\api\vertex.hpp" />
+    <ClInclude Include="src\main\glut\api\glutManager.hpp" />
     <ClInclude Include="src\main\lib.hpp" />
     <ClInclude Include="src\main\shaders\api\shadersManager.hpp" />
+    <ClInclude Include="src\main\solver\api\knapsackSolver.hpp" />
     <ClInclude Include="src\main\utils.hpp" />
-    <ClInclude Include="src\main\vao\api\vaoInitializer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -14,7 +14,7 @@ out vec4 color;
 void main()
 {
 	// Determines the position of the vertex using the transformation matrices
-	glPosition = projection * model * vec4(vertexPosition, 1.0f);
+	gl_Position = projection * model * vec4(vertexPosition, 1.0f);
 
 	// Passes the color to the fragment shader to assign it to the corresponding vertex
 	color = vertexColor;

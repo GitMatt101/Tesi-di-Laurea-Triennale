@@ -1,5 +1,6 @@
 #include "../api/shadersManager.hpp"
 #include "../../utils.hpp"
+#include <direct.h>
 
 ShadersManager::ShadersManager(char* vertexFile, char* fragmentFile) {
 	this->programId = 0;
@@ -8,59 +9,63 @@ ShadersManager::ShadersManager(char* vertexFile, char* fragmentFile) {
 }
 
 char* ShadersManager::readShaderSource(char* shaderFile) {
-	FILE* file;
-	errno_t err = fopen_s(&file, shaderFile, "r");
+	char cwd[1024];
+    if (_getcwd(cwd, sizeof(cwd)) == nullptr) {
+        fprintf(stderr, "ERROR - LOADING CURRENT DIRECTORY FAILED\n");
+        exit(-1);
+    }
+    strcat_s(cwd, sizeof(cwd), shaderFile);
+    FILE* file;
+    errno_t err = fopen_s(&file, cwd, "rb");
 
-	if (err != 0) {
-		fprintf(stderr, "ERROR - FILE LOADING FAILED (%s)", shaderFile);
-		exit(-1);
-	}
+    if (err != 0) {
+        fprintf(stderr, "ERROR %d - FILE LOADING FAILED (%s)\n", err, cwd);
+        exit(-1);
+    }
 
 	if (file == nullptr) {
-		fprintf(stderr, "ERROR - FILE OPENING FAILED (%s)", shaderFile);
-		fclose(file);
-		exit(-1);
-	}
+        fprintf(stderr, "ERROR - FILE OPENING FAILED (%s)\n", cwd);
+        exit(-1);
+    }
 
-	if (fseek(file, 0L, SEEK_END) != 0) {
-		fprintf(stderr, "ERROR - SEEKING END OF FILE FAILED (%s)", shaderFile);
-		fclose(file);
-		exit(-1);
-	}
+    if (fseek(file, 0L, SEEK_END) != 0) {
+        fprintf(stderr, "ERROR - SEEKING END OF FILE FAILED (%s)\n", cwd);
+        fclose(file);
+        exit(-1);
+    }
 
-	long size = ftell(file);
-	if (size == -1L) {
-		fprintf(stderr, "ERROR - FILE SIZE (%s)", shaderFile);
-		fclose(file);
-		exit(-1);
-	}
+    long size = ftell(file);
+    if (size == -1L) {
+        fprintf(stderr, "ERROR - FILE SIZE (%s)\n", cwd);
+        fclose(file);
+        exit(-1);
+    }
 
-	if (fseek(file, 0L, SEEK_SET) != 0) {
-		fprintf(stderr, "ERROR - SEEKING START OF FILE FAILED (%s)", shaderFile);
-		fclose(file);
-		exit(-1);
-	}
+    if (fseek(file, 0L, SEEK_SET) != 0) {
+        fprintf(stderr, "ERROR - SEEKING START OF FILE FAILED (%s)\n", cwd);
+        fclose(file);
+        exit(-1);
+    }
 
-	// Alloca il buffer
-	char* buf = new(std::nothrow) char[size + 1];
-	if (buf == nullptr) {
-		fprintf(stderr, "ERROR - ALLOCATING FRAME BUFFER FAILED (%s)", shaderFile);
-		fclose(file);
-		exit(-1);
-	}
+    char* buf = new(std::nothrow) char[size + 1];
+    if (buf == nullptr) {
+        fprintf(stderr, "ERROR - ALLOCATING FRAME BUFFER FAILED (%s)\n", cwd);
+        fclose(file);
+        exit(-1);
+    }
 
-	size_t bytesRead = fread(buf, 1, size, file);
-	if (bytesRead != size) {
-		fprintf(stderr, "ERROR - READING FILE FAILED (%s)", shaderFile);
-		delete[] buf;
-		fclose(file);
-		exit(-1);
-	}
+    size_t bytesRead = fread(buf, 1, size, file);
+    if (bytesRead != size) {
+        fprintf(stderr, "ERROR - READING FILE FAILED (%s)\n", cwd);
+        delete[] buf;
+        fclose(file);
+        exit(-1);
+    }
 
-	buf[size] = '\0';
-	fclose(file);
+    buf[size] = '\0';
+    fclose(file);
 
-	return buf;
+    return buf;
 }
 
 void ShadersManager::createProgram() {

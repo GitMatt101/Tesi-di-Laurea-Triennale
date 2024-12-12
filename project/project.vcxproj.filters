@@ -18,19 +18,25 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main\shaders\impl\shadersManagerImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main\geometry\impl\geometry.cpp">
+    <ClCompile Include="src\main\geometry\impl\shapeImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main\geometry\impl\shapes.cpp">
+    <ClCompile Include="src\main\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main\vao\impl\vaoInitializer.cpp">
+    <ClCompile Include="src\main\geometry\impl\shapeBuilderImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\geometry\impl\vertexImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\solver\impl\knapsackSolverImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\glut\impl\glutManagerImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,13 +50,19 @@
     <ClInclude Include="src\main\utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\main\geometry\api\geometry.hpp">
+    <ClInclude Include="src\main\geometry\api\shapeBuilder.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\main\geometry\api\shapes.hpp">
+    <ClInclude Include="src\main\geometry\api\shape.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\main\vao\api\vaoInitializer.hpp">
+    <ClInclude Include="src\main\geometry\api\vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main\solver\api\knapsackSolver.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main\glut\api\glutManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

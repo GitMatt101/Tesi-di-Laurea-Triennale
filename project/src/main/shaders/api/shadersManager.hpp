@@ -18,8 +18,6 @@ class ShadersManager {
 
 	public:
 		/**
-		* Initializes the ShadersManager.
-		*
 		* @param vertexFile - name of the vertex shader file.
 		* @param fragmentFile - name of the fragment shader file.
 		*/
@@ -31,7 +29,7 @@ class ShadersManager {
 		void createProgram();
 
 		/**
-		* Retrieves the program's id
+		* Retrieves the program's id.
 		*/
 		GLuint getProgramId() const;
 };
