@@ -39,12 +39,18 @@
     <ClCompile Include="src\main\glut\impl\glutManagerImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\main\camera\impl\cameraImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\camera\impl\perspectiveImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main\camera\impl\viewImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\shaders\api\shadersManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\main\lib.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\main\utils.hpp">
@@ -63,6 +69,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\main\glut\api\glutManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main\camera\api\camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main\camera\api\perspective.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main\camera\api\view.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

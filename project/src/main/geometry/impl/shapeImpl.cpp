@@ -1,6 +1,7 @@
 #include "../api/shape.hpp"
 #include "../api/shapeBuilder.hpp"
 #include <algorithm>
+#include <glm/gtc/matrix_transform.hpp>
 
 static float calcWidth(vector<Vertex*> vertices) {
 	float max = vertices[0]->getCoordinates().x;
@@ -41,8 +42,9 @@ static float calcDepth(vector<Vertex*> vertices) {
 	return max - min;
 }
 
-Shape::Shape(vector<Vertex*> vertices, float weight, float value) {
+Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, float value) {
 	this->vertices = vertices;
+	this->indices = indices;
 	this->shapeVAO = 0;
 	this->verticesVBO = 0;
 	this->colorsVBO = 0;
@@ -57,6 +59,8 @@ Shape::Shape(vector<Vertex*> vertices, float weight, float value) {
 	this->rotationAngle = 0.0f;
 	this->weight = weight;
 	this->value = value;
+	this->anchorWorld = vec4(0.0f);
+	this->anchorObj = vec4(0.0f);
 	ShapeBuilder::initShape(this);
 }
 
@@ -87,8 +91,8 @@ vector<vec3> Shape::getVerticesCoordinates() const {
 	return coordinates;
 }
 
-vector<vec3> Shape::getVerticesColors() const {
-	vector<vec3> colors;
+vector<vec4> Shape::getVerticesColors() const {
+	vector<vec4> colors;
 	for (const Vertex* vertex : this->vertices)
 		colors.push_back(vertex->getColor());
 	return colors;
@@ -126,6 +130,11 @@ void Shape::move(float x, float y, float z) {
 	this->x += x;
 	this->y += y;
 	this->z += z;
+
+	vec3 translation = vec3(x, y, z);
+	mat4 translationMatrix = translate(mat4(1), translation);
+
+	this->model *= mat4(1.0f) * mat4(1.0f) * translationMatrix;
 }
 
 float Shape::getWeight() const {
@@ -142,20 +151,4 @@ float Shape::getRotationAngle() const {
 
 void Shape::rotate(float angle) {
 	this->rotationAngle += angle;
-}
-
-vec4 Shape::getAnchorWorld() const {
-	return this->anchorWorld;
-}
-
-vec4 Shape::setAnchorWorld(vec4 anchor) {
-	this->anchorWorld = anchor;
-}
-
-vec4 Shape::getAnchorObj() const {
-	return this->anchorObj;
-}
-
-vec4 Shape::setAnchorObj(vec4 anchor) {
-	this->anchorObj = anchor;
 }

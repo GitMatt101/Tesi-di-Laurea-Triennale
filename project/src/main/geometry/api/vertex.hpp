@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 using namespace glm;
 
 /// <summary>
@@ -8,7 +9,7 @@ using namespace glm;
 class Vertex {
 	private:
 		vec3 coordinates;
-		vec3 color;
+		vec4 color;
 
 	public:
 		/// <summary>
@@ -16,7 +17,7 @@ class Vertex {
 		/// </summary>
 		/// <param name="coordinates"></param>
 		/// <param name="color"></param>
-		Vertex(vec3 coordinates, vec3 color);
+		Vertex(vec3 coordinates, vec4 color);
 
 		/// <returns>The vertex' coordinates.</returns>
 		vec3 getCoordinates() const;
@@ -26,7 +27,8 @@ class Vertex {
 		/// </summary>
 		/// <param name="x">- Horizontal movement.</param>
 		/// <param name="y">- Vertical movement.</param>
-		void move(float x, float y);
+		/// <param name="z">- Depth movement.</param>
+		void move(float x, float y, float z);
 
 		/// <summary>
 		/// Sets the vertex' coordinates.
@@ -35,5 +37,5 @@ class Vertex {
 		void setCoordinates(vec3 coordinates);
 
 		/// <returns>The vertex' color.</returns>
-		vec3 getColor() const;
+		vec4 getColor() const;
 };

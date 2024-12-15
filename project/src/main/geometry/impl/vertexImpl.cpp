@@ -1,6 +1,6 @@
 #include "../api/vertex.hpp"
 
-Vertex::Vertex(vec3 coordinates, vec3 color) {
+Vertex::Vertex(vec3 coordinates, vec4 color) {
 	this->coordinates = coordinates;
 	this->color = color;
 }
@@ -13,11 +13,12 @@ void Vertex::setCoordinates(vec3 coordinates) {
 	this->coordinates = coordinates;
 }
 
-void Vertex::move(float x, float y) {
+void Vertex::move(float x, float y, float z) {
 	this->coordinates.x += x;
 	this->coordinates.y += y;
+	this->coordinates.z += z;
 }
 
-vec3 Vertex::getColor() const {
+vec4 Vertex::getColor() const {
 	return this->color;
 }

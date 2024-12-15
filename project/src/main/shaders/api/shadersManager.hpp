@@ -1,5 +1,5 @@
 #pragma once
-#include "../../lib.hpp"
+#include <gl/glew.h>
 #include "../../utils.hpp"
 
 class ShadersManager {

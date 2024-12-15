@@ -130,6 +130,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\main\camera\impl\cameraImpl.cpp" />
+    <ClCompile Include="src\main\camera\impl\perspectiveImpl.cpp" />
+    <ClCompile Include="src\main\camera\impl\viewImpl.cpp" />
     <ClCompile Include="src\main\geometry\impl\shapeBuilderImpl.cpp" />
     <ClCompile Include="src\main\geometry\impl\shapeImpl.cpp" />
     <ClCompile Include="src\main\geometry\impl\vertexImpl.cpp" />
@@ -139,11 +142,13 @@
     <ClCompile Include="src\main\test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\main\camera\api\camera.hpp" />
+    <ClInclude Include="src\main\camera\api\perspective.hpp" />
+    <ClInclude Include="src\main\camera\api\view.hpp" />
     <ClInclude Include="src\main\geometry\api\shapeBuilder.hpp" />
     <ClInclude Include="src\main\geometry\api\shape.hpp" />
     <ClInclude Include="src\main\geometry\api\vertex.hpp" />
     <ClInclude Include="src\main\glut\api\glutManager.hpp" />
-    <ClInclude Include="src\main\lib.hpp" />
     <ClInclude Include="src\main\shaders\api\shadersManager.hpp" />
     <ClInclude Include="src\main\solver\api\knapsackSolver.hpp" />
     <ClInclude Include="src\main\utils.hpp" />

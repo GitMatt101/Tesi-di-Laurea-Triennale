@@ -36,7 +36,7 @@ class Shape {
 		/// Base constructor.
 		/// </summary>
 		/// <param name="vertices"></param>
-		Shape(vector<Vertex*> vertices, float value, float weight);
+		Shape(vector<Vertex*> vertices, vector<GLuint> indices, float value, float weight);
 
 		/// <returns>The pointer to the shape's VAO.</returns>
 		GLuint* getVAO();
@@ -57,7 +57,7 @@ class Shape {
 		vector<vec3> getVerticesCoordinates() const;
 
 		/// <returns>The shape's vertices' colors</returns>
-		vector<vec3> getVerticesColors() const;
+		vector<vec4> getVerticesColors() const;
 
 		vector<GLuint> getIndices() const;
 
@@ -104,10 +104,4 @@ class Shape {
 		/// </summary>
 		/// <param name="angle">- The rotation angle to be added to the current one.</param>
 		void rotate(float angle);
-
-		vec4 getAnchorWorld() const;
-		vec4 setAnchorWorld(vec4 anchor);
-
-		vec4 getAnchorObj() const;
-		vec4 setAnchorObj(vec4 anchor);
 };

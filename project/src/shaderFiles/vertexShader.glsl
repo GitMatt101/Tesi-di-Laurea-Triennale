@@ -1,21 +1,17 @@
-#version 420 core
+#version 330 core
 
-// Input variables
-layout (location = 0) in vec3 vertexPosition;
-layout (location = 1) in vec4 vertexColor;
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec4 aColor;
 
-// Transformation matrices
-uniform mat4 projection;
 uniform mat4 model;
+uniform mat4 projection;
+uniform mat4 view;
+uniform vec3 viewPos;
 
-// Output variable that is sent to the fragment shader
-out vec4 color;
+out vec4 ourColor;
 
 void main()
 {
-	// Determines the position of the vertex using the transformation matrices
-	gl_Position = projection * model * vec4(vertexPosition, 1.0f);
-
-	// Passes the color to the fragment shader to assign it to the corresponding vertex
-	color = vertexColor;
-} 
+	gl_Position = projection*view*model*vec4(aPos, 1.0);
+    ourColor = aColor;
+}

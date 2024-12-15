@@ -1,6 +1,7 @@
 #include "../api/shadersManager.hpp"
 #include "../../utils.hpp"
 #include <direct.h>
+#include <string>
 
 ShadersManager::ShadersManager(char* vertexFile, char* fragmentFile) {
 	this->programId = 0;
@@ -73,7 +74,7 @@ void ShadersManager::createProgram() {
 	char infoLog[512];
 	GLenum error = glGetError();
 
-	glClearColor(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b, BACKGROUND_COLOR.a);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	GLchar* vertexShader = this->readShaderSource(vertexFile);
 	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
