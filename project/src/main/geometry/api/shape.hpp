@@ -104,4 +104,6 @@ class Shape {
 		/// </summary>
 		/// <param name="angle">- The rotation angle to be added to the current one.</param>
 		void rotate(float angle);
+
+		void init();
 };

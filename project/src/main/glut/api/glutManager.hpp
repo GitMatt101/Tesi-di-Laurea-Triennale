@@ -54,19 +54,6 @@ class GlutManager {
 		/// <param name="value"></param>
 		static void update(int value);
 
-	public:
-		/// <summary>
-		/// Base constructor
-		/// </summary>
-		GlutManager();
-
-		/// <summary>
-		/// Opens a window to run the application on.
-		/// </summary>
-		/// <param name="argc">Number of arguments passed to main on application's execution.</param>
-		/// <param name="argv">Arguments passed to main on application's execution.<param>
-		void openWindow(int argc, char** argv);
-
 		/// <summary>
 		/// Accessor for the draw scene flut function.
 		/// </summary>
@@ -103,4 +90,17 @@ class GlutManager {
 		/// <param name="x">- Horizontal position of the cursor.</param>
 		/// <param name="y">- Verrtical position of the cursor.</param>
 		static void lookAroundAccessor(int x, int y);
+
+	public:
+		/// <summary>
+		/// Base constructor
+		/// </summary>
+		GlutManager(vector<Shape*> shapes);
+
+		/// <summary>
+		/// Opens a window to run the application on.
+		/// </summary>
+		/// <param name="argc">Number of arguments passed to main on application's execution.</param>
+		/// <param name="argv">Arguments passed to main on application's execution.<param>
+		void openWindow(int argc, char** argv);
 };

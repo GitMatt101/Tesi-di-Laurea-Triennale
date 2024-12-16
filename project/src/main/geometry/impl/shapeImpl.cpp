@@ -61,6 +61,9 @@ Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, flo
 	this->value = value;
 	this->anchorWorld = vec4(0.0f);
 	this->anchorObj = vec4(0.0f);
+}
+
+void Shape::init() {
 	ShapeBuilder::initShape(this);
 }
 

@@ -8,7 +8,7 @@
 
 GlutManager* GlutManager::instance = nullptr;
 
-GlutManager::GlutManager() {
+GlutManager::GlutManager(vector<Shape*> shapes) {
 	this->instance = this;
 	this->shapes = shapes;
 	this->projectionMatrixUniform = 0;
@@ -43,15 +43,9 @@ void GlutManager::openWindow(int argc, char** argv) {
 	glewExperimental = GL_TRUE;
 	glewInit();
 	this->shadersManager->createProgram();
-	// init scene
 
-	auto square1 = ShapeBuilder::createBox(1.0f, 1.0f, 1.0f, vec4(1.0f, 0.0f, 0.0f, 1.0f));
-	auto square2 = ShapeBuilder::createBox(1.0f, 1.0f, 1.0f, vec4(0.0f, 1.0f, 0.0f, 1.0f));
-	Shape* box1 = new Shape(square1.first, square1.second, 0.0f, 0.0f);
-	Shape* box2 = new Shape(square2.first, square2.second, 0.0f, 0.0f);
-	box2->move(0.5f, 0.5f, -0.5f);
-	this->shapes.push_back(box1);
-	this->shapes.push_back(box2);
+	for (Shape* shape : this->shapes)
+		shape->init();
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

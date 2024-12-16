@@ -1,23 +1,23 @@
 #include "../api/shapeBuilder.hpp"
 
 pair<vector<Vertex*>, vector<GLuint>> ShapeBuilder::createBox(float width, float height, float depth, vec4 color) {
-    float x = width / 2;
-    float y = height / 2;
-    float z = depth / 2;
+    float x = width;
+    float y = height;
+    float z = depth;
 
     vector<Vertex* > vertices;
 
     // Front
-    vertices.push_back(new Vertex(vec3(-x, y, z), color));
+    vertices.push_back(new Vertex(vec3(0, y, z), color));
     vertices.push_back(new Vertex(vec3(x, y, z), color));
-    vertices.push_back(new Vertex(vec3(x, -y, z), color));
-    vertices.push_back(new Vertex(vec3(-x, -y, z), color));
+    vertices.push_back(new Vertex(vec3(x, 0, z), color));
+    vertices.push_back(new Vertex(vec3(0, 0, z), color));
 
     // Back
-    vertices.push_back(new Vertex(vec3(-x, y, -z), color));
-    vertices.push_back(new Vertex(vec3(x, y, -z), color));
-    vertices.push_back(new Vertex(vec3(x, -y, -z), color));
-    vertices.push_back(new Vertex(vec3(-x, -y, -z), color));
+    vertices.push_back(new Vertex(vec3(0, y, 0), color));
+    vertices.push_back(new Vertex(vec3(x, y, 0), color));
+    vertices.push_back(new Vertex(vec3(x, 0, 0), color));
+    vertices.push_back(new Vertex(vec3(0, 0, 0), color));
 
     // Indexes
     vector<GLuint> indices = {
