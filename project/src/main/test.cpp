@@ -82,9 +82,9 @@ int main(int argc, char **argv) {
 	vector<Triple> boxes = {
 		{1, 1, 1},
 		{1, 2, 1},
-		{2, 2, 3},
 		{4, 1, 1},
-		{2, 1, 3}
+		{2, 1, 3},
+		{2, 2, 3}
 	};
 	vector<pair<Triple, Triple>> placedBoxes;
 
@@ -92,20 +92,30 @@ int main(int argc, char **argv) {
 		int xi = 0;
 		int yi = 0;
 		int zi = 0;
+		int maxx = maxX(placedBoxes, boxes[i]);
+		int maxy = maxY(placedBoxes, boxes[i]);
+		int maxz = maxZ(placedBoxes, boxes[i]);
 		if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] }))
-			xi = maxX(placedBoxes, boxes[i]);
+			xi = maxx;
+		if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] })) {
+			xi = 0;
+			yi = maxy;
+		}
 		if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] }))
-			yi = maxY(placedBoxes, boxes[i]);
+			xi = maxx;
 		if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] })) {
 			xi = 0;
 			yi = 0;
-			zi = maxZ(placedBoxes, boxes[i]);
-			if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] })) {
-				xi = maxX(placedBoxes, boxes[i]);
-				if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] }))
-					yi = maxY(placedBoxes, boxes[i]);
-			}
+			zi = maxz;
 		}
+		if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] }))
+			xi = maxx;
+		if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] })) {
+			xi = 0;
+			yi = maxy;
+		}
+		if (collides(placedBoxes, { { xi, yi, zi }, boxes[i] }))
+			xi = maxx;
 		placedBoxes.push_back({ { xi, yi, zi }, boxes[i] });
 	}
 
