@@ -31,7 +31,6 @@ class Shape {
 		float width;
 		float height;
 		float depth;
-		float rotationAngle;
 		float value;
 		float weight;
 		vec4 anchorWorld;
@@ -87,14 +86,8 @@ class Shape {
 		/// <returns>The shape's position as a pair. The first value is x, the second is y and the third is z.</returns>
 		tuple<float, float, float> getPosition() const;
 
-		/// <returns>The shape's width.</returns>
-		float getWidth() const;
-
-		/// <returns>The shape's height.</returns>
-		float getHeight() const;
-
-		/// <returns>The shape's depth.</returns>
-		float getDepth() const;
+		/// <returns>The shape's size as a tuple.</returns>
+		tuple<float, float, float> getSize() const;
 
 		/// <summary>
 		/// Moves the shape.
@@ -109,15 +102,6 @@ class Shape {
 
 		/// <returns>The shape's value.</returns>
 		float getValue() const;
-
-		/// <returns>The shape's rotation angle in degrees.</returns>
-		float getRotationAngle() const;
-
-		/// <summary>
-		/// Rotates the shape by increasing its rotation angle.
-		/// </summary>
-		/// <param name="angle">- The rotation angle to be added to the current one.</param>
-		void rotate(float angle);
 
 		bool targetReached() const;
 

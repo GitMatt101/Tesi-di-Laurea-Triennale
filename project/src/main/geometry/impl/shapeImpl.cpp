@@ -64,7 +64,6 @@ Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, flo
 	this->width = calcWidth(vertices);
 	this->height = calcHeight(vertices);
 	this->depth = calcDepth(vertices);
-	this->rotationAngle = 0.0f;
 	this->weight = weight;
 	this->value = value;
 	this->anchorWorld = vec4(0.0f);
@@ -126,16 +125,8 @@ tuple<float, float, float> Shape::getPosition() const {
 	return tuple<float, float, float>(this->x, this->y, this->z);
 }
 
-float Shape::getWidth() const {
-	return this->width;
-}
-
-float Shape::getHeight() const {
-	return this->height;
-}
-
-float Shape::getDepth() const {
-	return this->depth;
+tuple<float, float, float> Shape::getSize() const {
+	return { this->width, this->height, this->depth };
 }
 
 void Shape::move(float x, float y, float z) {
@@ -155,14 +146,6 @@ float Shape::getWeight() const {
 
 float Shape::getValue() const {
 	return this->value;
-}
-
-float Shape::getRotationAngle() const {
-	return this->rotationAngle;
-}
-
-void Shape::rotate(float angle) {
-	this->rotationAngle += angle;
 }
 
 bool Shape::targetReached() const {
