@@ -1,7 +1,9 @@
 #include "../api/shape.hpp"
 #include "../api/shapeBuilder.hpp"
+#include "../../utils.hpp"
 #include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
+#include <tuple>
 
 static float calcWidth(vector<Vertex*> vertices) {
 	float max = vertices[0]->getCoordinates().x;
@@ -42,7 +44,7 @@ static float calcDepth(vector<Vertex*> vertices) {
 	return max - min;
 }
 
-Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, float value) {
+Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, float value, float xStart, float yStart, float zStart, float xTarget, float yTarget, float zTarget) {
 	this->vertices = vertices;
 	this->indices = indices;
 	this->shapeVAO = 0;
@@ -53,6 +55,12 @@ Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, flo
 	this->x = 0.0f;
 	this->y = 0.0f;
 	this->z = 0.0f;
+	this->xTarget = xTarget;
+	this->yTarget = yTarget;
+	this->zTarget = zTarget;
+	this->xStart = xStart;
+	this->yStart = yStart;
+	this->zStart = zStart;
 	this->width = calcWidth(vertices);
 	this->height = calcHeight(vertices);
 	this->depth = calcDepth(vertices);
@@ -61,6 +69,7 @@ Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, flo
 	this->value = value;
 	this->anchorWorld = vec4(0.0f);
 	this->anchorObj = vec4(0.0f);
+	this->move(xStart, yStart, zStart);
 }
 
 void Shape::init() {
@@ -154,4 +163,19 @@ float Shape::getRotationAngle() const {
 
 void Shape::rotate(float angle) {
 	this->rotationAngle += angle;
+}
+
+bool Shape::targetReached() const {
+	return this->xTarget - this->x <= 0.001 && this->yTarget - this->y <= 0.001 && this->zTarget - this->z <= 0.001;
+}
+
+void Shape::moveTowardsTarget() {
+	float xStep = (this->xTarget - this->xStart) / (FRAME_LENGTH * 3);
+	float yStep = (this->yTarget - this->yStart) / (FRAME_LENGTH * 3);
+	float zStep = (this->zTarget - this->zStart) / (FRAME_LENGTH * 3);
+	this->move(xStep, yStep, zStep);
+}
+
+void Shape::setIndices(vector<GLuint> indices) {
+	this->indices = indices;
 }

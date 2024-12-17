@@ -22,6 +22,12 @@ class Shape {
 		float x;
 		float y;
 		float z;
+		float xTarget;
+		float yTarget;
+		float zTarget;
+		float xStart;
+		float yStart;
+		float zStart;
 		float width;
 		float height;
 		float depth;
@@ -33,10 +39,16 @@ class Shape {
 
 	public:
 		/// <summary>
-		/// Base constructor.
+		/// Base constructior
 		/// </summary>
 		/// <param name="vertices"></param>
-		Shape(vector<Vertex*> vertices, vector<GLuint> indices, float value, float weight);
+		/// <param name="indices"></param>
+		/// <param name="value"></param>
+		/// <param name="weight"></param>
+		/// <param name="xTarget"></param>
+		/// <param name="yTarget"></param>
+		/// <param name="zTarget"></param>
+		Shape(vector<Vertex*> vertices, vector<GLuint> indices, float value, float weight, float xStart, float yStart, float zStart, float xTarget, float yTarget, float zTarget);
 
 		/// <returns>The pointer to the shape's VAO.</returns>
 		GLuint* getVAO();
@@ -60,6 +72,8 @@ class Shape {
 		vector<vec4> getVerticesColors() const;
 
 		vector<GLuint> getIndices() const;
+
+		void setIndices(vector<GLuint> indices);
 
 		/// <returns>The shape's model matrix.</returns>
 		mat4 getModel() const;
@@ -104,6 +118,10 @@ class Shape {
 		/// </summary>
 		/// <param name="angle">- The rotation angle to be added to the current one.</param>
 		void rotate(float angle);
+
+		bool targetReached() const;
+
+		void moveTowardsTarget();
 
 		void init();
 };

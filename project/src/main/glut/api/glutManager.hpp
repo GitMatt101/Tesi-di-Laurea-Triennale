@@ -21,6 +21,8 @@ class GlutManager {
 		vector<Shape*> shapes;
 		Camera* camera;
 		ShadersManager* shadersManager;
+		GLenum polygonMode;
+		GLenum elementsMode;
 
 		/// <summary>
 		/// Draws the scene.
@@ -66,14 +68,6 @@ class GlutManager {
 		/// <param name="x">- Horizontal position of the cursor when the key is pressed.</param>
 		/// <param name="y">- Verrtical position of the cursor when the key is pressed.</param>
 		static void movementAccessor(unsigned char key, int x, int y);
-
-		/// <summary>
-		/// Accessor for the special keys glut function.
-		/// </summary>
-		/// <param name="key">- ASCII code of the pressed key.</param>
-		/// <param name="x">- Horizontal position of the cursor when the key is pressed.</param>
-		/// <param name="y">- Verrtical position of the cursor when the key is pressed.</param>
-		static void specialKeyAccessor(int key, int x, int y);
 
 		/// <summary>
 		/// Accessor for the zoom glut function.

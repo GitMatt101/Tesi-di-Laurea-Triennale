@@ -21,12 +21,18 @@ pair<vector<Vertex*>, vector<GLuint>> ShapeBuilder::createBox(float width, float
 
     // Indexes
     vector<GLuint> indices = {
-        // Front face
-        0, 1, 1, 2, 2, 3, 3, 0,
-        // Back face
-        4, 5, 5, 6, 6, 7, 7, 4,
-        // Connecting edges
-        0, 4, 1, 5, 2, 6, 3, 7
+        // Front Face
+        0, 1, 2, 2, 3, 0,
+        // Right Face
+        1, 5, 6, 6, 2, 1,
+        // Back Face
+        7, 6, 5, 5, 4, 7,
+        // Left Face
+        4, 0, 3, 3, 7, 4,
+        // Top Face
+        4, 5, 1, 1, 0, 4,
+        // Bottom Face
+        3, 2, 6, 6, 7, 3
     };
 
     return { vertices, indices };

@@ -6,6 +6,29 @@
 #include "../../geometry/api/shapeBuilder.hpp"
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+vector<GLuint> linesIndices = {
+	// Front face
+	0, 1, 1, 2, 2, 3, 3, 0,
+	// Back face
+	4, 5, 5, 6, 6, 7, 7, 4,
+	// Connecting edges
+	0, 4, 1, 5, 2, 6, 3, 7
+};
+vector<GLuint> trianglesIndices = {
+	// Front Face
+	0, 1, 2, 2, 3, 0,
+	// Right Face
+	1, 5, 6, 6, 2, 1,
+	// Back Face
+	7, 6, 5, 5, 4, 7,
+	// Left Face
+	4, 0, 3, 3, 7, 4,
+	// Top Face
+	4, 5, 1, 1, 0, 4,
+	// Bottom Face
+	3, 2, 6, 6, 7, 3
+};
+
 GlutManager* GlutManager::instance = nullptr;
 
 GlutManager::GlutManager(vector<Shape*> shapes) {
@@ -17,11 +40,14 @@ GlutManager::GlutManager(vector<Shape*> shapes) {
 	this->viewPositionUniform = 0;
 	this->projectionMatrix = mat4(0.0f);
 	this->viewMatrix = mat4(0.0f);
+	this->polygonMode = GL_FILL;
+	this->elementsMode = GL_TRIANGLES;
 	this->camera = new Camera();
 	this->shadersManager = new ShadersManager(
 		(char*)"\\src\\shaderFiles\\vertexShader.glsl",
 		(char*)"\\src\\shaderFiles\\fragmentShader.glsl"
 	);
+	this->shapes[0]->setIndices(linesIndices);
 }
 
 void GlutManager::openWindow(int argc, char** argv) {
@@ -35,10 +61,9 @@ void GlutManager::openWindow(int argc, char** argv) {
 
 	glutDisplayFunc(drawSceneAccessor);
 	glutKeyboardFunc(movementAccessor);
-	glutSpecialFunc(specialKeyAccessor);
 	glutMouseWheelFunc(zoomAccessor);
 	glutPassiveMotionFunc(lookAroundAccessor);
-	glutTimerFunc(17, update, 0);
+	glutTimerFunc(FRAME_LENGTH, update, 0);
 
 	glewExperimental = GL_TRUE;
 	glewInit();
@@ -88,12 +113,19 @@ void GlutManager::drawScene(void) {
 	glUniformMatrix4fv(this->viewMatrixUniform, 1, GL_FALSE, value_ptr(this->viewMatrix));
 	glPointSize(10.0f);
 
-	for (Shape* shape : this->shapes) {
-		glUniformMatrix4fv(this->modelMatrixUniform, 1, GL_FALSE, value_ptr(shape->getModel()));
-		glBindVertexArray(*shape->getVAO());
+	Shape* container = this->shapes[0];
+	glUniformMatrix4fv(this->modelMatrixUniform, 1, GL_FALSE, value_ptr(container->getModel()));
+	glBindVertexArray(*container->getVAO());
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDrawElements(GL_LINES, (container->getIndices().size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_LINES, (shape->getIndices().size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
+	for (int i = 1; i < this->shapes.size(); i++) {
+		Shape* box = this->shapes[i];
+		glUniformMatrix4fv(this->modelMatrixUniform, 1, GL_FALSE, value_ptr(box->getModel()));
+		glBindVertexArray(*box->getVAO());
+		glPolygonMode(GL_FRONT_AND_BACK, this->polygonMode);
+		glDrawElements(this->elementsMode, (box->getIndices().size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
@@ -116,8 +148,11 @@ void GlutManager::movementAccessor(unsigned char key, int x, int y) {
 		case 'd': case 'D': // Right
 			instance->moveCamera(horizontalMovement.x, horizontalMovement.y, horizontalMovement.z);
 			break;
-		case 32: // Up
+		case 'e': case 'E': // Up
 			instance->moveCamera(verticalMovement.x, verticalMovement.y, verticalMovement.z);
+			break;
+		case 'q': case 'Q': // Down
+			instance->moveCamera(-verticalMovement.x, -verticalMovement.y, -verticalMovement.z);
 			break;
 		case 'w': case 'W': // Forward
 			instance->moveCamera(depthMovement.x, depthMovement.y, depthMovement.z);
@@ -125,15 +160,29 @@ void GlutManager::movementAccessor(unsigned char key, int x, int y) {
 		case 's': case 'S': // Backward
 			instance->moveCamera(-depthMovement.x, -depthMovement.y, -depthMovement.z);
 			break;
+		case 'm': case 'M':
+			if (instance->polygonMode == GL_FILL) {
+				instance->polygonMode = GL_LINE;
+				instance->elementsMode = GL_LINES;
+				for (int i = 1; i < instance->shapes.size(); i++) {
+					Shape* shape = instance->shapes[i];
+					shape->setIndices(linesIndices);
+					shape->init();
+				}
+			} else {
+				instance->polygonMode = GL_FILL;
+				instance->elementsMode = GL_TRIANGLES;
+				for (int i = 1; i < instance->shapes.size(); i++) {
+					Shape* shape = instance->shapes[i];
+					shape->setIndices(trianglesIndices);
+					shape->init();
+				}
+			}
+			break;
 		case 27:
 			glutLeaveMainLoop();
 			break;
 		default:
-			int modifiers = glutGetModifiers();
-			if (modifiers & GLUT_ACTIVE_SHIFT) {
-				// Shift key is pressed
-				instance->moveCamera(-verticalMovement.x, -verticalMovement.y, -verticalMovement.z);
-			}
 			break;
 	}
 }
@@ -192,15 +241,13 @@ void GlutManager::lookAround(int x, int y) {
 	glutWarpPointer(centerX, centerY);
 }
 
-void GlutManager::specialKeyAccessor(int key, int x, int y) {
-	vec4 upVector = instance->camera->getView()->getUpvector();
-	vec3 verticalMovement = upVector * CAMERA_SPEED;
-
-	if (key == GLUT_KEY_SHIFT_L)
-		instance->moveCamera(-verticalMovement.x, -verticalMovement.y, -verticalMovement.z);
-}
-
 void GlutManager::update(int value) {
-	glutTimerFunc(17, update, 0); // 60 fps
+	for (Shape* box : instance->shapes) {
+		if (!box->targetReached()) {
+			box->moveTowardsTarget();
+			break;
+		}
+	}
+	glutTimerFunc(FRAME_LENGTH, update, 0);
 	glutPostRedisplay();
 }

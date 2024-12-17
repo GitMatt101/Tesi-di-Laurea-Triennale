@@ -2,6 +2,7 @@
 #include "./geometry/api/shapeBuilder.hpp"
 #include <iostream>
 #include <tuple>
+#include <time.h>
 using namespace std;
 
 struct Triple {
@@ -72,19 +73,21 @@ static bool collides(vector<pair<Triple, Triple>> placedBoxes, pair<Triple, Trip
 }
 
 int main(int argc, char **argv) {
-
+	srand(time(NULL));
 	vector<Shape*> scene;
 
 	auto containerValues = ShapeBuilder::createBox(4.0f, 4.0f, 4.0f, vec4(1.0f));
-	Shape* container = new Shape(containerValues.first, containerValues.second, 0.0f, 0.0f);
+	Shape* container = new Shape(containerValues.first, containerValues.second, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 	scene.push_back(container);
 
 	vector<Triple> boxes = {
-		{1, 1, 1},
-		{1, 2, 1},
-		{4, 1, 1},
-		{2, 1, 3},
-		{2, 2, 3}
+		{ 1, 1, 1 },
+		{ 1, 2, 1 },
+		{ 4, 1, 1 },
+		{ 2, 1, 3 },
+		{ 2, 2, 3 },
+		{ 1, 1, 1 },
+		{ 2, 2, 2 },
 	};
 	vector<pair<Triple, Triple>> placedBoxes;
 
@@ -120,14 +123,20 @@ int main(int argc, char **argv) {
 	}
 
 	for (int i = 0; i < placedBoxes.size(); i++) {
-		auto box = ShapeBuilder::createBox(placedBoxes[i].second.x, placedBoxes[i].second.y, placedBoxes[i].second.z, vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		Shape* shape = new Shape(box.first, box.second, 0.0f, 0.0f);
-		shape->move(placedBoxes[i].first.x, placedBoxes[i].first.y, placedBoxes[i].first.z);
+		int x = rand() % 15 + 5;
+		float r = (float)rand() / (float)RAND_MAX;
+		float g = (float)rand() / (float)RAND_MAX;
+		float b = (float)rand() / (float)RAND_MAX;
+		auto box = ShapeBuilder::createBox(placedBoxes[i].second.x, placedBoxes[i].second.y, placedBoxes[i].second.z, vec4(r, g, b, 1.0f));
+		Shape* shape = new Shape(
+			box.first,
+			box.second,
+			0.0f, 0.0f,
+			-x, 0, 0,
+			placedBoxes[i].first.x, placedBoxes[i].first.y, placedBoxes[i].first.z
+		);
 		scene.push_back(shape);
 	}
-
-	//for (int i = 0; i < placedBoxes.size(); i++)
-	//	printf("x: %d\ty: %d\tz:%d\n", placedBoxes[i].first.x, placedBoxes[i].first.y, placedBoxes[i].first.z);
 
 	GlutManager* glutManager = new GlutManager(scene);
 	glutManager->openWindow(argc, argv);
