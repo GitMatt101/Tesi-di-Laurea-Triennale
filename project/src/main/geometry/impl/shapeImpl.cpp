@@ -149,7 +149,7 @@ float Shape::getValue() const {
 }
 
 bool Shape::targetReached() const {
-	return this->xTarget - this->x <= 0.001 && this->yTarget - this->y <= 0.001 && this->zTarget - this->z <= 0.001;
+	return abs(this->xTarget - this->x) <= 0.001 && abs(this->yTarget - this->y) <= 0.001 && abs(this->zTarget - this->z) <= 0.001;
 }
 
 void Shape::moveTowardsTarget() {
