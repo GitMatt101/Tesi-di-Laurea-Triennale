@@ -44,7 +44,8 @@ static float calcDepth(vector<Vertex*> vertices) {
 	return max - min;
 }
 
-Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, float value, float xStart, float yStart, float zStart, float xTarget, float yTarget, float zTarget) {
+Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, int id, float weight, float value) {
+	this->id = id;
 	this->vertices = vertices;
 	this->indices = indices;
 	this->shapeVAO = 0;
@@ -55,12 +56,12 @@ Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, flo
 	this->x = 0.0f;
 	this->y = 0.0f;
 	this->z = 0.0f;
-	this->xTarget = xTarget;
-	this->yTarget = yTarget;
-	this->zTarget = zTarget;
-	this->xStart = xStart;
-	this->yStart = yStart;
-	this->zStart = zStart;
+	this->xTarget = 0.0f;
+	this->yTarget = 0.0f;
+	this->zTarget = 0.0f;
+	this->xStart = 0.0f;
+	this->yStart = 0.0f;
+	this->zStart = 0.0f;
 	this->width = calcWidth(vertices);
 	this->height = calcHeight(vertices);
 	this->depth = calcDepth(vertices);
@@ -68,7 +69,10 @@ Shape::Shape(vector<Vertex*> vertices, vector<GLuint> indices, float weight, flo
 	this->value = value;
 	this->anchorWorld = vec4(0.0f);
 	this->anchorObj = vec4(0.0f);
-	this->move(xStart, yStart, zStart);
+}
+
+int Shape::getId() const {
+	return this->id;
 }
 
 void Shape::init() {
@@ -121,12 +125,12 @@ void Shape::setModel(mat4 model) {
 	this->model = model;
 }
 
-tuple<float, float, float> Shape::getPosition() const {
-	return tuple<float, float, float>(this->x, this->y, this->z);
+vec3 Shape::getPosition() const {
+	return vec3(this->x, this->y, this->z);
 }
 
-tuple<float, float, float> Shape::getSize() const {
-	return { this->width, this->height, this->depth };
+vec3 Shape::getSize() const {
+	return vec3(this->width, this->height, this->depth);
 }
 
 void Shape::move(float x, float y, float z) {
@@ -136,6 +140,17 @@ void Shape::move(float x, float y, float z) {
 
 	vec3 translation = vec3(x, y, z);
 	mat4 translationMatrix = translate(mat4(1), translation);
+
+	this->model *= mat4(1.0f) * mat4(1.0f) * translationMatrix;
+}
+
+void Shape::setPosition(vec3 position) {
+	vec3 translation = position - this->getPosition();
+	mat4 translationMatrix = translate(mat4(1), translation);
+
+	this->x = position.x;
+	this->y = position.y;
+	this->z = position.z;
 
 	this->model *= mat4(1.0f) * mat4(1.0f) * translationMatrix;
 }
@@ -161,4 +176,26 @@ void Shape::moveTowardsTarget() {
 
 void Shape::setIndices(vector<GLuint> indices) {
 	this->indices = indices;
+}
+
+void Shape::setTarget(vec3 target) {
+	this->xTarget = target.x;
+	this->yTarget = target.y;
+	this->zTarget = target.z;
+}
+
+float Shape::getVolume() const {
+	return this->width * this->height * this->depth;
+}
+
+void Shape::restartPosition() {
+	this->setPosition(vec3(this->xStart, this->yStart, this->zStart));
+}
+
+void Shape::setStartPosition(vec3 position) {
+	this->xStart = position.x;
+	this->yStart = position.y;
+	this->zStart = position.z;
+
+	this->setPosition(position);
 }

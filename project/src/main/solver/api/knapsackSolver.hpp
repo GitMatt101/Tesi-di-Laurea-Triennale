@@ -28,3 +28,5 @@ class KnapsackSolver {
 		/// <returns>A vector of boxes chosen among the ones given.</returns>
 		vector<Shape*> solve3D(vector<Shape*> boxes) const;
 };
+
+vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);

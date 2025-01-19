@@ -19,6 +19,7 @@ class Shape {
 		mat4 model;
 		vector<Vertex*> vertices;
 		vector<GLuint> indices;
+		int id;
 		float x;
 		float y;
 		float z;
@@ -47,7 +48,9 @@ class Shape {
 		/// <param name="xTarget"></param>
 		/// <param name="yTarget"></param>
 		/// <param name="zTarget"></param>
-		Shape(vector<Vertex*> vertices, vector<GLuint> indices, float value, float weight, float xStart, float yStart, float zStart, float xTarget, float yTarget, float zTarget);
+		Shape(vector<Vertex*> vertices, vector<GLuint> indices, int id, float value, float weight);
+
+		int getId() const;
 
 		/// <returns>The pointer to the shape's VAO.</returns>
 		GLuint* getVAO();
@@ -83,11 +86,17 @@ class Shape {
 		/// <param name="model">- The new model matrix.</param>
 		void setModel(mat4 model);
 
-		/// <returns>The shape's position as a pair. The first value is x, the second is y and the third is z.</returns>
-		tuple<float, float, float> getPosition() const;
+		/// <returns>The shape's position as a vec3</returns>
+		vec3 getPosition() const;
 
-		/// <returns>The shape's size as a tuple.</returns>
-		tuple<float, float, float> getSize() const;
+		void setPosition(vec3 position);
+
+		void restartPosition();
+
+		/// <returns>The shape's size as a vec3.</returns>
+		vec3 getSize() const;
+
+		float getVolume() const;
 
 		/// <summary>
 		/// Moves the shape.
@@ -105,7 +114,11 @@ class Shape {
 
 		bool targetReached() const;
 
+		void setTarget(vec3 target);
+
 		void moveTowardsTarget();
 
 		void init();
+
+		void setStartPosition(vec3 position);
 };
