@@ -47,22 +47,17 @@ int main(int argc, char **argv) {
 		boxes.push_back(shape);
 	}
 
-	KnapsackSolver* ks = new KnapsackSolver(9.0f, 9.0f, 9.0f, 30);
+	KnapsackSolver* ks = new KnapsackSolver(9.0f, 9.0f, 9.0f, 100);
 	vector<Shape*> solution = ks->solve3D(boxes);
 	int profit = 0;
 	int weight = 0;
 	vector<Shape*> placedBoxes;
 	std::cout << "Chosen Boxes: ";
 	for (Shape* box : solution) {
-		std::cout << box->getId() << ", ";
+		std::cout << box->getId() << " ";
 		profit += box->getValue();
 		weight += box->getWeight();
 		vec3 c = getCoordinates(placedBoxes, box, vec3(9.0f, 9.0f, 9.0f));
-
-		box->setPosition(c);
-		box->setTarget(c);
-		placedBoxes.push_back(box);
-		scene.push_back(box);
 
 		vec3 boxSize = box->getSize();
 		vector<Shape*> boxesToReplace;
@@ -76,6 +71,11 @@ int main(int argc, char **argv) {
 				scene.erase(remove(scene.begin(), scene.end(), placedBox), scene.end());
 			}
 		}
+
+		box->setPosition(c);
+		box->setTarget(c);
+		placedBoxes.push_back(box);
+		scene.push_back(box);
 
 		for (Shape* boxToPlace : boxesToReplace) {
 			placedBoxes.push_back(box);

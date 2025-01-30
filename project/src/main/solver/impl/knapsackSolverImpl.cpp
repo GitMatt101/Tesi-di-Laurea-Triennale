@@ -155,25 +155,8 @@ static bool fits(vector<Shape*> placedBoxes, vec3 containerSize) {
 		if (c == vec3(-1))
 			return false;
 		vec3 boxSize = box->getSize();
-
-		vector<Shape*> boxesToReplace;
-		for (Shape* placedBox : boxes) {
-			vec3 pPos = placedBox->getPosition();
-			vec3 pSize = placedBox->getSize();
-			if (c.z < pPos.z
-				&& c.x + boxSize.x >= pPos.x && c.x <= pPos.x + pSize.x
-				&& c.y + boxSize.y >= pPos.y && c.y <= pPos.y + pSize.y) {
-				boxes.erase(remove(boxes.begin(), boxes.end(), placedBox), boxes.end());
-			}
-		}
 		box->setPosition(c);
 		boxes.push_back(box);
-
-		for (Shape* boxToPlace : boxesToReplace) {
-			vec3 c = getCoordinates(boxes, boxToPlace, vec3(9.0f, 9.0f, 9.0f));
-			box->setPosition(c);
-			boxes.push_back(box);
-		}
 	}
 	return true;
 }
@@ -199,11 +182,10 @@ vector<Shape*> KnapsackSolver::solve3D(vector<Shape*> boxes) const {
 	vector<vector<Shape*>> solutions;
 	solutions.push_back(initialSolution);
 	for (int i = MAX_ITERATIONS; i > 0; i--) {
-		cout << i << endl;
 		vector<Shape*> neighbor = initialSolution;
 		vector<Shape*> boxesLeft = getDifference(boxes, neighbor);
 		if (boxesLeft.size() == 0) {
-			if (getWeight(neighbor) <= this->maxWeight)
+			if (getWeight(neighbor) <= this->maxWeight && fits(neighbor, vec3(this->width, this->height, this->depth)))
 				return neighbor;
 			else
 				continue;
