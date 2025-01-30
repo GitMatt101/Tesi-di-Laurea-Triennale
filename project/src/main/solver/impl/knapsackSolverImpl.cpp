@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <map>
 
-constexpr auto MAX_ITERATIONS = 1000000;
+constexpr auto MAX_ITERATIONS = 10000;
 
 static int getWeight(vector<Shape*> boxes) {
 	int weight = 0;
@@ -119,6 +119,8 @@ vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) 
 	}
 	if (availablePositions.size() == 0)
 		return vec3(-1);
+
+	// Sort by depth
 	sort(availablePositions.begin(), availablePositions.end(), [](vec3 a, vec3 b) { return a.z < b.z; });
 	map<int, vector<vec3>> positions;
 	for (vec3 position : availablePositions)
@@ -126,36 +128,49 @@ vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) 
 
 	vector<vec3> bottomPositions = positions[availablePositions[0].z];
 	positions = {};
-	if (bottomPositions.size() > 1) {
-		sort(bottomPositions.begin(), bottomPositions.end(), [](vec3 a, vec3 b) { return a.y < b.y; });
-		for (vec3 position : bottomPositions)
-			positions[position.y].push_back(position);
-		vector<vec3> backPositions = positions[bottomPositions[0].y];
-		positions = {};
-		if (backPositions.size() > 1) {
-			sort(backPositions.begin(), backPositions.end(), [](vec3 a, vec3 b) { return a.x < b.x; });
-			for (vec3 position : backPositions)
-				positions[position.x].push_back(position);
-			vector<vec3> leftPositions = positions[backPositions[0].x];
-			positions = {};
-			return leftPositions[0];
-		}
-		else {
-			return backPositions[0];
-		}
-	}
-	else {
+	if (bottomPositions.size() == 1)
 		return bottomPositions[0];
-	}
+
+	// Sort by vertical position
+	sort(bottomPositions.begin(), bottomPositions.end(), [](vec3 a, vec3 b) { return a.y < b.y; });
+	for (vec3 position : bottomPositions)
+		positions[position.y].push_back(position);
+	vector<vec3> backPositions = positions[bottomPositions[0].y];
+	positions = {};
+	if (backPositions.size() == 1)
+		return backPositions[0];
+
+	// Sort by horizontal position
+	sort(backPositions.begin(), backPositions.end(), [](vec3 a, vec3 b) { return a.x < b.x; });
+	for (vec3 position : backPositions)
+		positions[position.x].push_back(position);
+	vector<vec3> leftPositions = positions[backPositions[0].x];
+	return leftPositions[0];
 }
 
 static bool fits(vector<Shape*> placedBoxes, vec3 containerSize) {
 	vector<Shape*> boxes;
 	for (Shape* box : placedBoxes) {
-		vec3 c = getCoordinates(boxes, box, containerSize);
+		vec3 c = getCoordinates(boxes, box, vec3(9.0f, 9.0f, 9.0f));
 		if (c == vec3(-1))
 			return false;
-		else {
+		vec3 boxSize = box->getSize();
+
+		vector<Shape*> boxesToReplace;
+		for (Shape* placedBox : boxes) {
+			vec3 pPos = placedBox->getPosition();
+			vec3 pSize = placedBox->getSize();
+			if (c.z < pPos.z
+				&& c.x + boxSize.x >= pPos.x && c.x <= pPos.x + pSize.x
+				&& c.y + boxSize.y >= pPos.y && c.y <= pPos.y + pSize.y) {
+				boxes.erase(remove(boxes.begin(), boxes.end(), placedBox), boxes.end());
+			}
+		}
+		box->setPosition(c);
+		boxes.push_back(box);
+
+		for (Shape* boxToPlace : boxesToReplace) {
+			vec3 c = getCoordinates(boxes, boxToPlace, vec3(9.0f, 9.0f, 9.0f));
 			box->setPosition(c);
 			boxes.push_back(box);
 		}
@@ -184,6 +199,7 @@ vector<Shape*> KnapsackSolver::solve3D(vector<Shape*> boxes) const {
 	vector<vector<Shape*>> solutions;
 	solutions.push_back(initialSolution);
 	for (int i = MAX_ITERATIONS; i > 0; i--) {
+		cout << i << endl;
 		vector<Shape*> neighbor = initialSolution;
 		vector<Shape*> boxesLeft = getDifference(boxes, neighbor);
 		if (boxesLeft.size() == 0) {
@@ -210,17 +226,18 @@ vector<Shape*> KnapsackSolver::solve3D(vector<Shape*> boxes) const {
 		}
 		if (getWeight(neighbor) > this->maxWeight)
 			continue;
+		auto it = find(solutions.begin(), solutions.end(), neighbor);
+		if (it != solutions.end())
+			continue;
 		int initialValue = getProfit(initialSolution);
 		int neighborValue = getProfit(neighbor);
 		bool accept = false;
 		if (neighborValue >= initialValue) {
-			sort(neighbor.begin(), neighbor.end(), [](Shape* a, Shape* b) { return a->getVolume() < b->getVolume(); });
 			if (fits(neighbor, vec3(this->width, this->height, this->depth)))
 				accept = true;
 		} else {
 			float p = rand() % 1001 / 1000.0f;
 			int delta = neighborValue - initialValue;
-			sort(neighbor.begin(), neighbor.end(), [](Shape* a, Shape* b) { return a->getVolume() < b->getVolume(); });
 			if (exp(delta / i) > p && fits(neighbor, vec3(this->width, this->height, this->depth)))
 				accept = true;
 		}

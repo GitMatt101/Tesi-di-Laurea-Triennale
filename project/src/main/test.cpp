@@ -52,21 +52,40 @@ int main(int argc, char **argv) {
 	int profit = 0;
 	int weight = 0;
 	vector<Shape*> placedBoxes;
-	cout << "Chosen Boxes: ";
+	std::cout << "Chosen Boxes: ";
 	for (Shape* box : solution) {
-		cout << box->getId() << ", ";
+		std::cout << box->getId() << ", ";
 		profit += box->getValue();
 		weight += box->getWeight();
 		vec3 c = getCoordinates(placedBoxes, box, vec3(9.0f, 9.0f, 9.0f));
+
 		box->setPosition(c);
 		box->setTarget(c);
 		placedBoxes.push_back(box);
 		scene.push_back(box);
+
+		vec3 boxSize = box->getSize();
+		vector<Shape*> boxesToReplace;
+		for (Shape* placedBox : placedBoxes) {
+			vec3 pPos = placedBox->getPosition();
+			vec3 pSize = placedBox->getSize();
+			if (c.z < pPos.z
+				&& c.x + boxSize.x > pPos.x && c.x < pPos.x + pSize.x
+				&& c.y + boxSize.y > pPos.y && c.y < pPos.y + pSize.y) {
+				placedBoxes.erase(remove(placedBoxes.begin(), placedBoxes.end(), placedBox), placedBoxes.end());
+				scene.erase(remove(scene.begin(), scene.end(), placedBox), scene.end());
+			}
+		}
+
+		for (Shape* boxToPlace : boxesToReplace) {
+			placedBoxes.push_back(box);
+			scene.push_back(box);
+		}
 	}
 	for (Shape* box : placedBoxes)
 		box->setStartPosition(vec3(box->getPosition().x, box->getPosition().y, rand() % 20 + 10));
-	cout << "\nProfit: " << profit << endl;
-	cout << "Weight: " << weight << "/" << 30 << endl;
+	std::cout << "\nProfit: " << profit << endl;
+	std::cout << "Weight: " << weight << "/" << 30 << endl;
 
 	GlutManager* glutManager = new GlutManager(scene);
 	glutManager->openWindow(argc, argv);
