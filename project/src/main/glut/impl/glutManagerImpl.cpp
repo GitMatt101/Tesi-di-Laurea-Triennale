@@ -31,9 +31,9 @@ vector<GLuint> trianglesIndices = {
 
 GlutManager* GlutManager::instance = nullptr;
 
-GlutManager::GlutManager(vector<Shape*> shapes) {
+GlutManager::GlutManager(vector<Box*> boxes) {
 	this->instance = this;
-	this->shapes = shapes;
+	this->boxes = boxes;
 	this->projectionMatrixUniform = 0;
 	this->viewMatrixUniform = 0;
 	this->modelMatrixUniform = 0;
@@ -47,7 +47,7 @@ GlutManager::GlutManager(vector<Shape*> shapes) {
 		(char*)"\\src\\shaderFiles\\vertexShader.glsl",
 		(char*)"\\src\\shaderFiles\\fragmentShader.glsl"
 	);
-	this->shapes[0]->setIndices(linesIndices);
+	this->boxes[0]->setIndices(linesIndices);
 }
 
 void GlutManager::openWindow(int argc, char** argv) {
@@ -69,7 +69,7 @@ void GlutManager::openWindow(int argc, char** argv) {
 	glewInit();
 	this->shadersManager->createProgram();
 
-	for (Shape* shape : this->shapes)
+	for (Box* shape : this->boxes)
 		shape->init();
 
 	glEnable(GL_DEPTH_TEST);
@@ -113,15 +113,15 @@ void GlutManager::drawScene(void) {
 	glUniformMatrix4fv(this->viewMatrixUniform, 1, GL_FALSE, value_ptr(this->viewMatrix));
 	glPointSize(10.0f);
 
-	Shape* container = this->shapes[0];
+	Box* container = this->boxes[0];
 	glUniformMatrix4fv(this->modelMatrixUniform, 1, GL_FALSE, value_ptr(container->getModel()));
 	glBindVertexArray(*container->getVAO());
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_LINES, (container->getIndices().size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	for (int i = 1; i < this->shapes.size(); i++) {
-		Shape* box = this->shapes[i];
+	for (int i = 1; i < this->boxes.size(); i++) {
+		Box* box = this->boxes[i];
 		glUniformMatrix4fv(this->modelMatrixUniform, 1, GL_FALSE, value_ptr(box->getModel()));
 		glBindVertexArray(*box->getVAO());
 		glPolygonMode(GL_FRONT_AND_BACK, this->polygonMode);
@@ -172,16 +172,16 @@ void GlutManager::movementAccessor(unsigned char key, int x, int y) {
 			if (instance->polygonMode == GL_FILL) {
 				instance->polygonMode = GL_LINE;
 				instance->elementsMode = GL_LINES;
-				for (int i = 1; i < instance->shapes.size(); i++) {
-					Shape* shape = instance->shapes[i];
+				for (int i = 1; i < instance->boxes.size(); i++) {
+					Box* shape = instance->boxes[i];
 					shape->setIndices(linesIndices);
 					shape->init();
 				}
 			} else {
 				instance->polygonMode = GL_FILL;
 				instance->elementsMode = GL_TRIANGLES;
-				for (int i = 1; i < instance->shapes.size(); i++) {
-					Shape* shape = instance->shapes[i];
+				for (int i = 1; i < instance->boxes.size(); i++) {
+					Box* shape = instance->boxes[i];
 					shape->setIndices(trianglesIndices);
 					shape->init();
 				}
@@ -250,7 +250,7 @@ void GlutManager::lookAround(int x, int y) {
 }
 
 void GlutManager::update(int value) {
-	for (Shape* box : instance->shapes) {
+	for (Box* box : instance->boxes) {
 		if (!box->targetReached()) {
 			box->moveTowardsTarget();
 			break;

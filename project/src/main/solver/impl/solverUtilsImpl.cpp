@@ -3,30 +3,30 @@
 #include <iostream>
 #include <map>
 
-int getWeight(vector<Shape*> boxes) {
+int getWeight(vector<Box*> boxes) {
 	int weight = 0;
-	for (Shape* box : boxes)
+	for (Box* box : boxes)
 		weight += box->getWeight();
 	return weight;
 }
 
-int getProfit(vector<Shape*> boxes) {
+int getProfit(vector<Box*> boxes) {
 	int profit = 0;
-	for (Shape* box : boxes)
+	for (Box* box : boxes)
 		profit += box->getValue();
 	return profit;
 }
 
-vector<Shape*> getDifference(vector<Shape*> v1, vector<Shape*> v2) {
+vector<Box*> getDifference(vector<Box*> v1, vector<Box*> v2) {
 	sort(v1.begin(), v1.end());
 	sort(v2.begin(), v2.end());
-	vector<Shape*> diff;
+	vector<Box*> diff;
 	set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(diff));
 	return diff;
 }
 
-static bool collides(vector<Shape*> placedBoxes, Shape* box, vec3 boxPosition, vec3 containerSize) {
-	for (Shape* boxPlaced : placedBoxes) {
+static bool collides(vector<Box*> placedBoxes, Box* box, vec3 boxPosition, vec3 containerSize) {
+	for (Box* boxPlaced : placedBoxes) {
 		bool xCheck = boxPlaced->getPosition().x + boxPlaced->getSize().x <= boxPosition.x || boxPosition.x + box->getSize().x <= boxPlaced->getPosition().x;
 		bool yCheck = boxPlaced->getPosition().y + boxPlaced->getSize().y <= boxPosition.y || boxPosition.y + box->getSize().y <= boxPlaced->getPosition().y;
 		bool zCheck = boxPlaced->getPosition().z + boxPlaced->getSize().z <= boxPosition.z || boxPosition.z + box->getSize().z <= boxPlaced->getPosition().z;
@@ -37,9 +37,9 @@ static bool collides(vector<Shape*> placedBoxes, Shape* box, vec3 boxPosition, v
 	return false;
 }
 
-int getMaxX(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) {
-	vector<Shape*> px;
-	for (Shape* placedBox : placedBoxes) {
+int getMaxX(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
+	vector<Box*> px;
+	for (Box* placedBox : placedBoxes) {
 		if (placedBox->getPosition().x + placedBox->getSize().x <= containerSize.x - box->getSize().x)
 			px.push_back(placedBox);
 	}
@@ -52,9 +52,9 @@ int getMaxX(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) {
 	return maxX;
 }
 
-int getMaxY(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) {
-	vector<Shape*> py;
-	for (Shape* placedBox : placedBoxes) {
+int getMaxY(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
+	vector<Box*> py;
+	for (Box* placedBox : placedBoxes) {
 		if (placedBox->getPosition().y + placedBox->getSize().y <= containerSize.y - box->getSize().y)
 			py.push_back(placedBox);
 	}
@@ -67,9 +67,9 @@ int getMaxY(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) {
 	return maxY;
 }
 
-int getMaxZ(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) {
-	vector<Shape*> pz;
-	for (Shape* placedBox : placedBoxes) {
+int getMaxZ(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
+	vector<Box*> pz;
+	for (Box* placedBox : placedBoxes) {
 		if (placedBox->getPosition().z + placedBox->getSize().z <= containerSize.z - box->getSize().z)
 			pz.push_back(placedBox);
 	}
@@ -82,12 +82,12 @@ int getMaxZ(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) {
 	return maxZ;
 }
 
-vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) {
+vec3 getCoordinates(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
 	if (placedBoxes.size() == 0)
 		return vec3(0);
 
 	vector<vec3> availablePositions;
-	for (Shape* placedBox : placedBoxes) {
+	for (Box* placedBox : placedBoxes) {
 		int xi = placedBox->getPosition().x;
 		int xRight = xi + placedBox->getSize().x;
 		int yi = placedBox->getPosition().y;
@@ -148,9 +148,9 @@ vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize) 
 	return leftPositions[0];
 }
 
-bool fits(vector<Shape*> placedBoxes, vec3 containerSize) {
-	vector<Shape*> boxes;
-	for (Shape* box : placedBoxes) {
+bool fits(vector<Box*> placedBoxes, vec3 containerSize) {
+	vector<Box*> boxes;
+	for (Box* box : placedBoxes) {
 		vec3 c = getCoordinates(boxes, box, containerSize);
 		if (c == vec3(-1))
 			return false;
@@ -161,12 +161,12 @@ bool fits(vector<Shape*> placedBoxes, vec3 containerSize) {
 	return true;
 }
 
-bool isFlying(vector<Shape*> placedBoxes, Shape* box, vec3 position) {
+bool isFlying(vector<Box*> placedBoxes, Box* box, vec3 position) {
 	if (position.y == 0)
 		return false;
 	vec3 size = box->getSize();
 	vec3 midPoint = vec3(position.x + size.x / 2, position.y, position.z + size.z / 2);
-	for (Shape* placedBox : placedBoxes) {
+	for (Box* placedBox : placedBoxes) {
 		if (placedBox->getPosition().y + placedBox->getSize().y == midPoint.y
 			&& placedBox->getPosition().x <= midPoint.x && midPoint.x <= placedBox->getPosition().x + placedBox->getSize().x
 			&& placedBox->getPosition().z <= midPoint.z && midPoint.z <= placedBox->getPosition().z + placedBox->getSize().z) {

@@ -1,27 +1,27 @@
 #pragma once
-#include "../../geometry/api/shape.hpp"
+#include "../../geometry/api/box.hpp"
 
 /// <summary>
-/// Calculates the total weight of a vector of shapes.
+/// Calculates the total weight of a vector of boxes.
 /// </summary>
 /// <param name="boxes"></param>
 /// <returns></returns>
-int getWeight(vector<Shape*> boxes);
+int getWeight(vector<Box*> boxes);
 
 /// <summary>
-/// Calculates the total profit of a vector of shapes.
+/// Calculates the total profit of a vector of boxes.
 /// </summary>
 /// <param name="boxes"></param>
 /// <returns></returns>
-int getProfit(vector<Shape*> boxes);
+int getProfit(vector<Box*> boxes);
 
 /// <summary>
-/// Calculates the difference betweeen 2 vector of shapes.
+/// Calculates the difference betweeen 2 vector of boxes.
 /// </summary>
 /// <param name="v1"></param>
 /// <param name="v2"></param>
-/// <returns>The shapes in v1 that are not in v2.</returns>
-vector<Shape*> getDifference(vector<Shape*> v1, vector<Shape*> v2);
+/// <returns>The boxes in v1 that are not in v2.</returns>
+vector<Box*> getDifference(vector<Box*> v1, vector<Box*> v2);
 
 /// <summary>
 /// Checks if a box with the given coordinates would collide with another that is already placed.
@@ -31,7 +31,7 @@ vector<Shape*> getDifference(vector<Shape*> v1, vector<Shape*> v2);
 /// <param name="boxPosition"></param>
 /// <param name="containerSize"></param>
 /// <returns>true if the box collides with another one, false otherwise.</returns>
-static bool collides(vector<Shape*> placedBoxes, Shape* box, vec3 boxPosition, vec3 containerSize);
+static bool collides(vector<Box*> placedBoxes, Box* box, vec3 boxPosition, vec3 containerSize);
 
 /// <summary>
 /// Calculates the x value of the rightmost placed box that would allow the current box to be placed on its right side.
@@ -40,7 +40,7 @@ static bool collides(vector<Shape*> placedBoxes, Shape* box, vec3 boxPosition, v
 /// <param name="box"></param>
 /// <param name="containerSize"></param>
 /// <returns></returns>
-int getMaxX(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
+int getMaxX(vector<Box*> placedBoxes, Box* box, vec3 containerSize);
 
 /// <summary>
 /// Calculates the y value of the upmost placed box that would allow the current box to be placed above it.
@@ -49,7 +49,7 @@ int getMaxX(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
 /// <param name="box"></param>
 /// <param name="containerSize"></param>
 /// <returns></returns>
-int getMaxY(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
+int getMaxY(vector<Box*> placedBoxes, Box* box, vec3 containerSize);
 
 /// <summary>
 /// Calculates the z value of the frontmost placed box that would allow the current box to be placed in front of it.
@@ -58,7 +58,7 @@ int getMaxY(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
 /// <param name="box"></param>
 /// <param name="containerSize"></param>
 /// <returns></returns>
-int getMaxZ(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
+int getMaxZ(vector<Box*> placedBoxes, Box* box, vec3 containerSize);
 
 
 /// <summary>
@@ -68,7 +68,7 @@ int getMaxZ(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
 /// <param name="box"></param>
 /// <param name="containerSize"></param>
 /// <returns></returns>
-vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
+vec3 getCoordinates(vector<Box*> placedBoxes, Box* box, vec3 containerSize);
 
 /// <summary>
 /// Checks if a combination of boxes fit in a container.
@@ -76,7 +76,7 @@ vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
 /// <param name="placedBoxes"></param>
 /// <param name="containerSize"></param>
 /// <returns>true if the boxes fit, false otherwise.</returns>
-bool fits(vector<Shape*> placedBoxes, vec3 containerSize);
+bool fits(vector<Box*> placedBoxes, vec3 containerSize);
 
 /// <summary>
 /// Checks if a box doesn't have another box beneath it.
@@ -84,4 +84,4 @@ bool fits(vector<Shape*> placedBoxes, vec3 containerSize);
 /// <param name="box"></param>
 /// <param name="position"></param>
 /// <returns>True if the box doesn't have another box beneath it, false otherwise</returns>
-bool isFlying(vector<Shape*> placedBoxes, Shape* box, vec3 position);
+bool isFlying(vector<Box*> placedBoxes, Box* box, vec3 position);

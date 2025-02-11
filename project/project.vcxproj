@@ -147,7 +147,7 @@
     <ClInclude Include="src\main\camera\api\perspective.hpp" />
     <ClInclude Include="src\main\camera\api\view.hpp" />
     <ClInclude Include="src\main\geometry\api\shapeBuilder.hpp" />
-    <ClInclude Include="src\main\geometry\api\shape.hpp" />
+    <ClInclude Include="src\main\geometry\api\box.hpp" />
     <ClInclude Include="src\main\geometry\api\vertex.hpp" />
     <ClInclude Include="src\main\glut\api\glutManager.hpp" />
     <ClInclude Include="src\main\shaders\api\shadersManager.hpp" />

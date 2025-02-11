@@ -1,13 +1,13 @@
 #pragma once
 #include <vector>
 #include "vertex.hpp"
-#include "shape.hpp"
+#include "box.hpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
 using namespace std;
 
 /// <summary>
-/// Class used to create and initialize shapes.
+/// Class used to create and initialize GL objects.
 /// </summary>
 class ShapeBuilder {
 	public:
@@ -24,5 +24,5 @@ class ShapeBuilder {
 		/// Initializes a shape's VAO and VBOs.
 		/// </summary>
 		/// <param name="shape"></param>
-		static void initShape(Shape* shape);
+		static void initShape(Box* shape);
 };

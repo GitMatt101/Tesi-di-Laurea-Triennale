@@ -8,14 +8,14 @@ using namespace glm;
 using namespace std;
 
 /// <summary>
-/// Class that models a generic shape.
+/// Class that models a box.
 /// </summary>
-class Shape {
+class Box {
 	private:
-		GLuint shapeVAO;
+		GLuint VAO;
 		GLuint verticesVBO;
 		GLuint colorsVBO;
-		GLuint shapeEBO;
+		GLuint EBO;
 		mat4 model;
 		vector<Vertex*> vertices;
 		vector<GLuint> indices;
@@ -48,82 +48,82 @@ class Shape {
 		/// <param name="xTarget"></param>
 		/// <param name="yTarget"></param>
 		/// <param name="zTarget"></param>
-		Shape(vector<Vertex*> vertices, vector<GLuint> indices, int id, float value, float weight);
+		Box(vector<Vertex*> vertices, vector<GLuint> indices, int id, float value, float weight);
 
 		int getId() const;
 
-		/// <returns>The pointer to the shape's VAO.</returns>
+		/// <returns>The pointer to the box's VAO.</returns>
 		GLuint* getVAO();
 
-		/// <returns>The pointer to the shape's vertices' VBO.</returns>
+		/// <returns>The pointer to the box's vertices' VBO.</returns>
 		GLuint* getVerticesVBO();
 
-		/// <returns>The pointer to the shape's vertices' colors' VBO.</returns>
+		/// <returns>The pointer to the box's vertices' colors' VBO.</returns>
 		GLuint* getColorsVBO();
 
-		/// <returns>The pointer to the shape's EBO.</returns>
+		/// <returns>The pointer to the box's EBO.</returns>
 		GLuint* getEBO();
 
-		/// <returns>The shape's vertices.</returns>
+		/// <returns>The box's vertices.</returns>
 		vector<Vertex*> getVertices() const;
 
-		/// <returns>The shape's vertices' coordinates</returns>
+		/// <returns>The box's vertices' coordinates</returns>
 		vector<vec3> getVerticesCoordinates() const;
 
-		/// <returns>The shape's vertices' colors</returns>
+		/// <returns>The box's vertices' colors</returns>
 		vector<vec4> getVerticesColors() const;
 
 		vector<GLuint> getIndices() const;
 
 		void setIndices(vector<GLuint> indices);
 
-		/// <returns>The shape's model matrix.</returns>
+		/// <returns>The box's model matrix.</returns>
 		mat4 getModel() const;
 
 		/// <summary>
-		/// Sets the model matrix of the shape.
+		/// Sets the model matrix of the box.
 		/// </summary>
 		/// <param name="model">- The new model matrix.</param>
 		void setModel(mat4 model);
 
-		/// <returns>The shape's position as a vec3</returns>
+		/// <returns>The box's position as a vec3</returns>
 		vec3 getPosition() const;
 
 		/// <summary>
-		/// Sets the shape's position.
+		/// Sets the box's position.
 		/// </summary>
 		/// <param name="position">New position.</param>
 		void setPosition(vec3 position);
 
 		/// <summary>
-		/// Sets the shape's position to its starting coordinates.
+		/// Sets the box's position to its starting coordinates.
 		/// </summary>
 		void restartPosition();
 
-		/// <returns>The shape's size as a vec3.</returns>
+		/// <returns>The box's size as a vec3.</returns>
 		vec3 getSize() const;
 
 		/// <summary>
-		/// Moves the shape.
+		/// Moves the box.
 		/// </summary>
 		/// <param name="x">- Horizontal movement.</param>
 		/// <param name="y">- Vertical movement.</param>
 		/// <param name="z">- Depth movement.</param>
 		void move(float x, float y, float z);
 
-		/// <returns>The shape's weight.</returns>
+		/// <returns>The box's weight.</returns>
 		float getWeight() const;
 
-		/// <returns>The shape's value.</returns>
+		/// <returns>The box's value.</returns>
 		float getValue() const;
 
 		/// <summary>
-		/// Checks if the shape has arrived to its target coordinates.
+		/// Checks if the box has arrived to its target coordinates.
 		/// </summary>
 		bool targetReached() const;
 
 		/// <summary>
-		/// Sets the target coordinates for the shape's movement
+		/// Sets the target coordinates for the box's movement
 		/// </summary>
 		/// <param name="target"></param>
 		void setTarget(vec3 target);

@@ -2,7 +2,7 @@
 #include <string>
 #include <glm/mat4x4.hpp>
 #include <vector>
-#include "../../geometry/api/shape.hpp"
+#include "../../geometry/api/box.hpp"
 #include "../../camera/api/camera.hpp"
 #include "../../shaders/api/shadersManager.hpp"
 using namespace std;
@@ -18,7 +18,7 @@ class GlutManager {
 		unsigned int viewPositionUniform;
 		mat4 projectionMatrix;
 		mat4 viewMatrix;
-		vector<Shape*> shapes;
+		vector<Box*> boxes;
 		Camera* camera;
 		ShadersManager* shadersManager;
 		GLenum polygonMode;
@@ -87,9 +87,10 @@ class GlutManager {
 
 	public:
 		/// <summary>
-		/// Base constructor
+		/// Base constructor.
 		/// </summary>
-		GlutManager(vector<Shape*> shapes);
+		/// <param name="boxes">Boxes to show in the view.</param>
+		GlutManager(vector<Box*> boxes);
 
 		/// <summary>
 		/// Opens a window to run the application on.

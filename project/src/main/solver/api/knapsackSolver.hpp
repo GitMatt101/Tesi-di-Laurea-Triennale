@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../../geometry/api/shape.hpp"
+#include "../../geometry/api/box.hpp"
 using namespace std;
 
 class KnapsackSolver {
@@ -20,5 +20,5 @@ class KnapsackSolver {
 		/// </summary>
 		/// <param name="boxes"></param>
 		/// <returns>A vector of boxes chosen among the ones given.</returns>
-		vector<Shape*> solve3D(vector<Shape*> boxes) const;
+		vector<Box*> solve3D(vector<Box*> boxes) const;
 };

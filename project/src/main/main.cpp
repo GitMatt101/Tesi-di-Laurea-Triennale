@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
 	vec3 containerSize = vec3(0);
 	int maxWeight;
-	vector<Shape*> boxes;
+	vector<Box*> boxes;
 
 	#pragma region Read File
 	file >> containerSize.x >> containerSize.y >> containerSize.z;
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 	int i = 1;
 	while (file >> width >> height >> depth >> profit >> weight >> r >> g >> b) {
 		auto bVal = ShapeBuilder::createBox(width, height, depth, vec4(r, g, b, 1));
-		Shape* shape = new Shape(bVal.first, bVal.second, i, profit, weight);
+		Box* shape = new Box(bVal.first, bVal.second, i, profit, weight);
 		i++;
 		boxes.push_back(shape);
 	}
@@ -48,14 +48,14 @@ int main(int argc, char** argv) {
 
 	KnapsackSolver* ks = new KnapsackSolver(containerSize, maxWeight);
 	auto start = std::chrono::high_resolution_clock::now();
-	vector<Shape*> solution = ks->solve3D(boxes);
+	vector<Box*> solution = ks->solve3D(boxes);
 	auto end = std::chrono::high_resolution_clock::now();
 	chrono::duration<double> elapsed = end - start;
 
 	#pragma region Print Solution
 	cout << "Boxes: ";
 	int totalProfit = 0, totalWeight = 0;
-	for (Shape* box : solution) {
+	for (Box* box : solution) {
 		cout << box->getId() << " ";
 		totalProfit += box->getValue();
 		totalWeight += box->getWeight();
@@ -65,20 +65,20 @@ int main(int argc, char** argv) {
 	#pragma endregion
 
 	#pragma region Prepare Scene
-	vector<Shape*> scene;
+	vector<Box*> scene;
 	auto containerValues = ShapeBuilder::createBox(containerSize.x, containerSize.y, containerSize.z, vec4(1.0f));
-	Shape* container = new Shape(containerValues.first, containerValues.second, 0, 0.0f, 0.0f);
+	Box* container = new Box(containerValues.first, containerValues.second, 0, 0.0f, 0.0f);
 	scene.push_back(container);
 
-	vector<Shape*> placedBoxes;
-	for (Shape* box : solution) {
+	vector<Box*> placedBoxes;
+	for (Box* box : solution) {
 		vec3 c = getCoordinates(placedBoxes, box, containerSize);
 
 		vec3 boxSize = box->getSize();
-		sort(placedBoxes.begin(), placedBoxes.end(), [](Shape* a, Shape* b) { return a->getPosition().y < b->getPosition().y; });
-		vector<Shape*> boxesToReplace;
+		sort(placedBoxes.begin(), placedBoxes.end(), [](Box* a, Box* b) { return a->getPosition().y < b->getPosition().y; });
+		vector<Box*> boxesToReplace;
 		if (box == solution[solution.size() - 1]) {
-			for (Shape* placedBox : placedBoxes) {
+			for (Box* placedBox : placedBoxes) {
 				vec3 pPos = placedBox->getPosition();
 				vec3 pSize = placedBox->getSize();
 				if (c.z < pPos.z
@@ -97,13 +97,13 @@ int main(int argc, char** argv) {
 		scene.push_back(box);
 
 		if (box == solution[solution.size() - 1]) {
-			for (Shape* boxToPlace : boxesToReplace) {
+			for (Box* boxToPlace : boxesToReplace) {
 				placedBoxes.push_back(boxToPlace);
 				scene.push_back(boxToPlace);
 			}
 		}
 	}
-	for (Shape* box : placedBoxes)
+	for (Box* box : placedBoxes)
 		box->setStartPosition(vec3(box->getPosition().x, box->getPosition().y, rand() % 20 + 10));
 	#pragma endregion
 

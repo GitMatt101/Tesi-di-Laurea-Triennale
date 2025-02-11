@@ -38,7 +38,7 @@ pair<vector<Vertex*>, vector<GLuint>> ShapeBuilder::createBox(float width, float
     return { vertices, indices };
 }
 
-void ShapeBuilder::initShape(Shape* shape) {
+void ShapeBuilder::initShape(Box* shape) {
 	// Initialize VAO
     glGenVertexArrays(1, shape->getVAO());
     glBindVertexArray(*shape->getVAO());

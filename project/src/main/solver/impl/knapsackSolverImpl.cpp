@@ -11,21 +11,21 @@ KnapsackSolver::KnapsackSolver(vec3 containerSize, float maxWeight) {
 	this->maxWeight = maxWeight;
 }
 
-vector<Shape*> KnapsackSolver::solve3D(vector<Shape*> boxes) const {
-	vector<Shape*> initialSolution;
+vector<Box*> KnapsackSolver::solve3D(vector<Box*> boxes) const {
+	vector<Box*> initialSolution;
 	do {
 		initialSolution.clear();
-		for (Shape* box : boxes) {
+		for (Box* box : boxes) {
 			if (rand() % 2 == 1)
 				initialSolution.push_back(box);
 		}
 	} while (getWeight(initialSolution) > this->maxWeight || !fits(initialSolution, this->containerSize));
 
-	vector<vector<Shape*>> solutions;
+	vector<vector<Box*>> solutions;
 	solutions.push_back(initialSolution);
 	for (int i = MAX_ITERATIONS; i > 0; i--) {
-		vector<Shape*> neighbor = initialSolution;
-		vector<Shape*> boxesLeft = getDifference(boxes, neighbor);
+		vector<Box*> neighbor = initialSolution;
+		vector<Box*> boxesLeft = getDifference(boxes, neighbor);
 		if (boxesLeft.size() == 0) {
 			if (getWeight(neighbor) <= this->maxWeight && fits(neighbor, this->containerSize))
 				return neighbor;
@@ -73,8 +73,8 @@ vector<Shape*> KnapsackSolver::solve3D(vector<Shape*> boxes) const {
 				solutions.push_back(neighbor);
 		}
 	}
-	vector<Shape*> max;
-	for (vector<Shape*> solution : solutions) {
+	vector<Box*> max;
+	for (vector<Box*> solution : solutions) {
 		if (getProfit(solution) > getProfit(max))
 			max = solution;
 	}
