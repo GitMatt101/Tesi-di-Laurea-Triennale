@@ -7,6 +7,7 @@
 #include <chrono>
 #include <fstream>
 #include <direct.h>
+#include <algorithm>
 using namespace std;
 
 int main(int argc, char** argv) {
@@ -74,16 +75,19 @@ int main(int argc, char** argv) {
 		vec3 c = getCoordinates(placedBoxes, box, containerSize);
 
 		vec3 boxSize = box->getSize();
+		sort(placedBoxes.begin(), placedBoxes.end(), [](Shape* a, Shape* b) { return a->getPosition().y < b->getPosition().y; });
 		vector<Shape*> boxesToReplace;
-		for (Shape* placedBox : placedBoxes) {
-			vec3 pPos = placedBox->getPosition();
-			vec3 pSize = placedBox->getSize();
-			if (c.z < pPos.z
-				&& c.x + boxSize.x > pPos.x && c.x < pPos.x + pSize.x
-				&& c.y + boxSize.y > pPos.y && c.y < pPos.y + pSize.y) {
-				boxesToReplace.push_back(placedBox);
-				placedBoxes.erase(remove(placedBoxes.begin(), placedBoxes.end(), placedBox), placedBoxes.end());
-				scene.erase(remove(scene.begin(), scene.end(), placedBox), scene.end());
+		if (box == solution[solution.size() - 1]) {
+			for (Shape* placedBox : placedBoxes) {
+				vec3 pPos = placedBox->getPosition();
+				vec3 pSize = placedBox->getSize();
+				if (c.z < pPos.z
+					&& c.x + boxSize.x > pPos.x && c.x < pPos.x + pSize.x
+					&& c.y + boxSize.y > pPos.y && c.y < pPos.y + pSize.y) {
+					boxesToReplace.push_back(placedBox);
+					placedBoxes.erase(remove(placedBoxes.begin(), placedBoxes.end(), placedBox), placedBoxes.end());
+					scene.erase(remove(scene.begin(), scene.end(), placedBox), scene.end());
+				}
 			}
 		}
 
@@ -92,9 +96,11 @@ int main(int argc, char** argv) {
 		placedBoxes.push_back(box);
 		scene.push_back(box);
 
-		for (Shape* boxToPlace : boxesToReplace) {
-			placedBoxes.push_back(boxToPlace);
-			scene.push_back(boxToPlace);
+		if (box == solution[solution.size() - 1]) {
+			for (Shape* boxToPlace : boxesToReplace) {
+				placedBoxes.push_back(boxToPlace);
+				scene.push_back(boxToPlace);
+			}
 		}
 	}
 	for (Shape* box : placedBoxes)

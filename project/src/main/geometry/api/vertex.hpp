@@ -23,14 +23,6 @@ class Vertex {
 		vec3 getCoordinates() const;
 
 		/// <summary>
-		/// Moves the vertex.
-		/// </summary>
-		/// <param name="x">- Horizontal movement.</param>
-		/// <param name="y">- Vertical movement.</param>
-		/// <param name="z">- Depth movement.</param>
-		void move(float x, float y, float z);
-
-		/// <summary>
 		/// Sets the vertex' coordinates.
 		/// </summary>
 		/// <param name="coordinates"></param>

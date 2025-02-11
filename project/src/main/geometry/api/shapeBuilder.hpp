@@ -12,7 +12,7 @@ using namespace std;
 class ShapeBuilder {
 	public:
 		/// <summary>
-		/// Creates a rectangle.
+		/// Creates a box.
 		/// </summary>
 		/// <param name="width"></param>
 		/// <param name="height"></param>

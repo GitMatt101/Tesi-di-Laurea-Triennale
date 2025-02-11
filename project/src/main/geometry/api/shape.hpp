@@ -89,14 +89,19 @@ class Shape {
 		/// <returns>The shape's position as a vec3</returns>
 		vec3 getPosition() const;
 
+		/// <summary>
+		/// Sets the shape's position.
+		/// </summary>
+		/// <param name="position">New position.</param>
 		void setPosition(vec3 position);
 
+		/// <summary>
+		/// Sets the shape's position to its starting coordinates.
+		/// </summary>
 		void restartPosition();
 
 		/// <returns>The shape's size as a vec3.</returns>
 		vec3 getSize() const;
-
-		float getVolume() const;
 
 		/// <summary>
 		/// Moves the shape.
@@ -112,13 +117,30 @@ class Shape {
 		/// <returns>The shape's value.</returns>
 		float getValue() const;
 
+		/// <summary>
+		/// Checks if the shape has arrived to its target coordinates.
+		/// </summary>
 		bool targetReached() const;
 
+		/// <summary>
+		/// Sets the target coordinates for the shape's movement
+		/// </summary>
+		/// <param name="target"></param>
 		void setTarget(vec3 target);
 
+		/// <summary>
+		/// Moves towards the target.
+		/// </summary>
 		void moveTowardsTarget();
 
+		/// <summary>
+		/// Inits VAO and VBOs.
+		/// </summary>
 		void init();
 
+		/// <summary>
+		/// Sets the starting position, also setting current position.
+		/// </summary>
+		/// <param name="position"></param>
 		void setStartPosition(vec3 position);
 };

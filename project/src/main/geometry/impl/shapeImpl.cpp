@@ -184,10 +184,6 @@ void Shape::setTarget(vec3 target) {
 	this->zTarget = target.z;
 }
 
-float Shape::getVolume() const {
-	return this->width * this->height * this->depth;
-}
-
 void Shape::restartPosition() {
 	this->setPosition(vec3(this->xStart, this->yStart, this->zStart));
 }

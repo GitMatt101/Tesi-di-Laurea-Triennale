@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
 	vector<int> profits;
 	vector<int> weights;
 	auto start = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 100; i++) {
 		vector<Shape*> solution = ks->solve3D(boxes);
 		int profit = 0;
 		int weight = 0;

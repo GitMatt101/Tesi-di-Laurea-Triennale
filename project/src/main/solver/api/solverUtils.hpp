@@ -77,3 +77,11 @@ vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);
 /// <param name="containerSize"></param>
 /// <returns>true if the boxes fit, false otherwise.</returns>
 bool fits(vector<Shape*> placedBoxes, vec3 containerSize);
+
+/// <summary>
+/// Checks if a box doesn't have another box beneath it.
+/// </summary>
+/// <param name="box"></param>
+/// <param name="position"></param>
+/// <returns>True if the box doesn't have another box beneath it, false otherwise</returns>
+bool isFlying(vector<Shape*> placedBoxes, Shape* box, vec3 position);

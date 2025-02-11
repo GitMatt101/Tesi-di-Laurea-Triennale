@@ -15,9 +15,11 @@ class Perspective {
 
 		/// <returns>The camera's aspect ratio.</returns>
 		float getAspectRatio() const;
-		
+
+		/// <returns>The camera's near plane.</returns>
 		float getNearPlane() const;
 
+		/// <returns>The camera's far plane.</returns>
 		float getFarPlane() const;
 
 		/// <summary>

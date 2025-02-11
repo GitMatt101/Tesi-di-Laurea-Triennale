@@ -62,7 +62,7 @@ void GlutManager::openWindow(int argc, char** argv) {
 	glutDisplayFunc(drawSceneAccessor);
 	glutKeyboardFunc(movementAccessor);
 	glutMouseWheelFunc(zoomAccessor);
-	//glutPassiveMotionFunc(lookAroundAccessor);
+	glutPassiveMotionFunc(lookAroundAccessor);
 	glutTimerFunc(FRAME_LENGTH, update, 0);
 
 	glewExperimental = GL_TRUE;
