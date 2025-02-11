@@ -3,23 +3,17 @@
 #include "../../geometry/api/shape.hpp"
 using namespace std;
 
-/// <summary>
-/// Class that solves the knapsack problem using dynamic programming.
-/// </summary>
 class KnapsackSolver {
 	private:
-		float width;
-		float height;
-		float depth;
+		vec3 containerSize;
 		float maxWeight;
-		tuple<float, float, float> emptySpace;
 
 	public:
 		/// <summary>
 		/// Base constructor.
 		/// </summary>
 		/// <param name="values"></param>
-		KnapsackSolver(float width, float height, float depth, float maxWeight);
+		KnapsackSolver(vec3 containerSize, float maxWeight);
 
 		/// <summary>
 		/// Solves 3-dimensional Knapsack Problem.
@@ -28,5 +22,3 @@ class KnapsackSolver {
 		/// <returns>A vector of boxes chosen among the ones given.</returns>
 		vector<Shape*> solve3D(vector<Shape*> boxes) const;
 };
-
-vec3 getCoordinates(vector<Shape*> placedBoxes, Shape* box, vec3 containerSize);

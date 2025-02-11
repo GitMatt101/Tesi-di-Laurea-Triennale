@@ -22,6 +22,12 @@ class View {
 		vec4 getPosition() const;
 
 		/// <summary>
+		/// Sets the camera position.
+		/// </summary>
+		/// <param name="position"></param>
+		void setPosition(vec3 position);
+
+		/// <summary>
 		/// Moves the view position and target.
 		/// </summary>
 		/// <param name="movement">- Movement vector.</param>

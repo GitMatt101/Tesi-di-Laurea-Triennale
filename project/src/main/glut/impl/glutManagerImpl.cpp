@@ -62,7 +62,7 @@ void GlutManager::openWindow(int argc, char** argv) {
 	glutDisplayFunc(drawSceneAccessor);
 	glutKeyboardFunc(movementAccessor);
 	glutMouseWheelFunc(zoomAccessor);
-	glutPassiveMotionFunc(lookAroundAccessor);
+	//glutPassiveMotionFunc(lookAroundAccessor);
 	glutTimerFunc(FRAME_LENGTH, update, 0);
 
 	glewExperimental = GL_TRUE;
@@ -159,6 +159,14 @@ void GlutManager::movementAccessor(unsigned char key, int x, int y) {
 			break;
 		case 's': case 'S': // Backward
 			instance->moveCamera(-depthMovement.x, -depthMovement.y, -depthMovement.z);
+			break;
+		case 'k': case 'K':
+			instance->camera->getView()->setTarget(vec3(6.0f, 3.0f, 3.0f));
+			instance->camera->getView()->setPosition(vec3(-2.0f, 12.0f, 22.0f));
+			break;
+		case 'l': case 'L':
+			instance->camera->getView()->setTarget(vec3(3.0f, 3.0f, 3.0f));
+			instance->camera->getView()->setPosition(vec3(11.0f, 12.0f, 22.0f));
 			break;
 		case 'm': case 'M':
 			if (instance->polygonMode == GL_FILL) {

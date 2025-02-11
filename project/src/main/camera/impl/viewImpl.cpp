@@ -30,3 +30,7 @@ vec4 View::getUpvector() const {
 vec4 View::getDirection() const {
 	return this->target - this->position;
 }
+
+void View::setPosition(vec3 position) {
+	this->position = vec4(position, 1.0f);
+}
