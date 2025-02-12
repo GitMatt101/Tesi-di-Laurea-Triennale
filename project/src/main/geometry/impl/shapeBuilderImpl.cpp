@@ -34,7 +34,6 @@ pair<vector<Vertex*>, vector<GLuint>> ShapeBuilder::createBox(float width, float
         // Bottom Face
         3, 2, 6, 6, 7, 3
     };
-
     return { vertices, indices };
 }
 

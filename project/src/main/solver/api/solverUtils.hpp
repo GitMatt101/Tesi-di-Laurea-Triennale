@@ -60,6 +60,14 @@ int getMaxY(vector<Box*> placedBoxes, Box* box, vec3 containerSize);
 /// <returns></returns>
 int getMaxZ(vector<Box*> placedBoxes, Box* box, vec3 containerSize);
 
+/// <summary>
+/// Calculates all the available positions for a box.
+/// </summary>
+/// <param name="placedBoxes"></param>
+/// <param name="box"></param>
+/// <param name="containerSize"></param>
+/// <returns></returns>
+vector<vec3> getAvailablePositions(vector<Box*> placedBoxes, Box* box, vec3 containerSize);
 
 /// <summary>
 /// Calculates the best coordinates for a box.
