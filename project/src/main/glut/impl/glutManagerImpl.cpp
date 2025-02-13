@@ -59,10 +59,10 @@ void GlutManager::openWindow(int argc, char** argv) {
 	glutInitWindowPosition(50, 50);
 	glutCreateWindow(APP_NAME);
 
-	glutDisplayFunc(drawSceneAccessor);
-	glutKeyboardFunc(movementAccessor);
-	glutMouseWheelFunc(zoomAccessor);
-	glutPassiveMotionFunc(lookAroundAccessor);
+	glutDisplayFunc(drawScene);
+	glutKeyboardFunc(moveCamera);
+	glutMouseWheelFunc(zoomCamera);
+	glutPassiveMotionFunc(lookAround);
 	glutTimerFunc(FRAME_LENGTH, update, 0);
 
 	glewExperimental = GL_TRUE;
@@ -85,54 +85,48 @@ void GlutManager::openWindow(int argc, char** argv) {
 	glutMainLoop();
 }
 
-void GlutManager::drawSceneAccessor() {
-	instance->drawScene();
-}
-
 void GlutManager::drawScene(void) {
-	this->projectionMatrix = perspective(
-		radians(this->camera->getPerspective()->getFOV()),
-		this->camera->getPerspective()->getAspectRatio(),
-		this->camera->getPerspective()->getNearPlane(),
-		this->camera->getPerspective()->getFarPlane()
+	instance->projectionMatrix = perspective(
+		radians(instance->camera->getPerspective()->getFOV()),
+		instance->camera->getPerspective()->getAspectRatio(),
+		instance->camera->getPerspective()->getNearPlane(),
+		instance->camera->getPerspective()->getFarPlane()
 	);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Background Color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(this->shadersManager->getProgramId());
-	glUniformMatrix4fv(this->projectionMatrixUniform, 1, GL_FALSE, value_ptr(this->projectionMatrix));
+	glUseProgram(instance->shadersManager->getProgramId());
+	glUniformMatrix4fv(instance->projectionMatrixUniform, 1, GL_FALSE, value_ptr(instance->projectionMatrix));
 
-	// Creates the view matrix applied to the vertices (world coordinates), transforming them in camera coordinates.
-	this->viewMatrix = lookAt(
-		vec3(this->camera->getView()->getPosition()),
-		vec3(this->camera->getView()->getTarget()),
-		vec3(this->camera->getView()->getUpvector())
+	instance->viewMatrix = lookAt(
+		vec3(instance->camera->getView()->getPosition()),
+		vec3(instance->camera->getView()->getTarget()),
+		vec3(instance->camera->getView()->getUpvector())
 	);
 
-	glUniformMatrix4fv(this->viewMatrixUniform, 1, GL_FALSE, value_ptr(this->viewMatrix));
+	glUniformMatrix4fv(instance->viewMatrixUniform, 1, GL_FALSE, value_ptr(instance->viewMatrix));
 	glPointSize(10.0f);
 
-	Box* container = this->boxes[0];
-	glUniformMatrix4fv(this->modelMatrixUniform, 1, GL_FALSE, value_ptr(container->getModel()));
+	Box* container = instance->boxes[0];
+	glUniformMatrix4fv(instance->modelMatrixUniform, 1, GL_FALSE, value_ptr(container->getModel()));
 	glBindVertexArray(*container->getVAO());
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_LINES, (container->getIndices().size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	for (int i = 1; i < this->boxes.size(); i++) {
-		Box* box = this->boxes[i];
-		glUniformMatrix4fv(this->modelMatrixUniform, 1, GL_FALSE, value_ptr(box->getModel()));
+	for (int i = 1; i < instance->boxes.size(); i++) {
+		Box* box = instance->boxes[i];
+		glUniformMatrix4fv(instance->modelMatrixUniform, 1, GL_FALSE, value_ptr(box->getModel()));
 		glBindVertexArray(*box->getVAO());
-		glPolygonMode(GL_FRONT_AND_BACK, this->polygonMode);
-		glDrawElements(this->elementsMode, (box->getIndices().size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
+		glPolygonMode(GL_FRONT_AND_BACK, instance->polygonMode);
+		glDrawElements(instance->elementsMode, (box->getIndices().size()) * sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
-
 	glutSwapBuffers();
 }
 
-void GlutManager::movementAccessor(unsigned char key, int x, int y) {
+void GlutManager::moveCamera(unsigned char key, int x, int y) {
 	vec4 direction = instance->camera->getView()->getDirection();
 	vec4 upVector = instance->camera->getView()->getUpvector();
 
@@ -143,22 +137,22 @@ void GlutManager::movementAccessor(unsigned char key, int x, int y) {
 	switch (key)
 	{
 		case 'a': case 'A': // Left
-			instance->moveCamera(-horizontalMovement.x, -horizontalMovement.y, -horizontalMovement.z);
+			instance->camera->getView()->move(vec4(-horizontalMovement, 1.0f));
 			break;
 		case 'd': case 'D': // Right
-			instance->moveCamera(horizontalMovement.x, horizontalMovement.y, horizontalMovement.z);
+			instance->camera->getView()->move(vec4(horizontalMovement, 1.0f));
 			break;
 		case 'e': case 'E': // Up
-			instance->moveCamera(verticalMovement.x, verticalMovement.y, verticalMovement.z);
+			instance->camera->getView()->move(vec4(verticalMovement, 1.0f));
 			break;
 		case 'q': case 'Q': // Down
-			instance->moveCamera(-verticalMovement.x, -verticalMovement.y, -verticalMovement.z);
+			instance->camera->getView()->move(vec4(-verticalMovement, 1.0f));
 			break;
 		case 'w': case 'W': // Forward
-			instance->moveCamera(depthMovement.x, depthMovement.y, depthMovement.z);
+			instance->camera->getView()->move(vec4(depthMovement, 1.0f));
 			break;
 		case 's': case 'S': // Backward
-			instance->moveCamera(-depthMovement.x, -depthMovement.y, -depthMovement.z);
+			instance->camera->getView()->move(vec4(-depthMovement, 1.0f));
 			break;
 		case 'k': case 'K':
 			instance->camera->getView()->setTarget(vec3(6.0f, 3.0f, 3.0f));
@@ -195,57 +189,39 @@ void GlutManager::movementAccessor(unsigned char key, int x, int y) {
 	}
 }
 
-void GlutManager::moveCamera(float x, float y, float z) {
-	this->camera->getView()->move(vec4(x, y, z, 1.0f));
-}
-
-void GlutManager::zoomAccessor(int wheel, int direction, int x, int y) {
-	instance->zoomCamera(-direction);
-}
-
-void GlutManager::zoomCamera(int direction) {
-	this->camera->getPerspective()->zoom(CAMERA_ZOOM * direction);
-}
-
-void GlutManager::lookAroundAccessor(int x, int y) {
-	instance->lookAround(x, y);
+void GlutManager::zoomCamera(int wheel, int direction, int x, int y) {
+	instance->camera->getPerspective()->zoom(CAMERA_ZOOM * direction);
 }
 
 void GlutManager::lookAround(int x, int y) {
-	static int mouseX = x;
+	// Initialization
+	static int mouseX = x;	
 	static int mouseY = y;
 	static float theta = -90.0f;
 	static float phi = 0.0f;
 
-	float alfa = 0.05;
 	float centerX = APP_WIDTH / 2.0f;
 	float centerY = APP_HEIGHT / 2.0f;
-
-	float xoffset = x - centerX;
-	float yoffset = APP_HEIGHT - y - centerY;
-
 	mouseX = x;
 	mouseY = y;
 
-	xoffset *= alfa;
-	yoffset *= alfa;
+	float xoffset = (x - centerX) * 0.05f;
+	float yoffset = (APP_HEIGHT - y - centerY) * 0.05f;
 	theta += xoffset;
 	phi += yoffset;
 
-	if (phi > 90.0f)
-		phi = 90.0f;
-	if (phi < -90.0f)
-		phi = -90.0f;
-
+	if (phi > 90.0f) phi = 90.0f;
+	if (phi < -90.0f) phi = -90.0f;
 	vec3 front = vec3(
 		cos(radians(theta)) * cos(radians(phi)),
 		sin(radians(phi)),
 		sin(radians(theta)) * cos(radians(phi))
 	);
-	vec4 position = this->camera->getView()->getPosition();
+	vec4 position = instance->camera->getView()->getPosition();
 	vec4 direction = vec4(normalize(front), 0.0f);
-	this->camera->getView()->setTarget(vec3(position + direction));
+	instance->camera->getView()->setTarget(vec3(position + direction));
 
+	// Keep cursor on the center of the window
 	glutWarpPointer(centerX, centerY);
 }
 

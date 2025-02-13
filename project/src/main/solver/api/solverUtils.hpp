@@ -93,3 +93,29 @@ bool fits(vector<Box*> placedBoxes, vec3 containerSize);
 /// <param name="position"></param>
 /// <returns>True if the box doesn't have another box beneath it, false otherwise</returns>
 bool isFlying(vector<Box*> placedBoxes, Box* box, vec3 position);
+
+/// <summary>
+/// Creates a random applicable solution.
+/// </summary>
+/// <param name="boxes"></param>
+/// <param name="maxWeight"></param>
+/// <param name="containerSize"></param>
+/// <returns></returns>
+vector<Box*> createInitialSolution(vector<Box*> boxes, int maxWeight, vec3 containerSize);
+
+/// <summary>
+/// Creates a random neighbor solution.
+/// </summary>
+/// <param name="currentSolution"></param>
+/// <param name="remainingBoxes"></param>
+/// <returns></returns>
+vector<Box*> createNeighborSolution(vector<Box*> currentSolution, vector<Box*> remainingBoxes);
+
+/// <summary>
+/// Creates the solution that matches a list of boxes.
+/// </summary>
+/// <param name="boxes"></param>
+/// <returns></returns>
+vector<pair<Box*, vec3>> createSolutionFromBoxes(vector<Box*> boxes);
+
+vector<vec3> getBoxesCoordinates(vector<Box*> boxes);

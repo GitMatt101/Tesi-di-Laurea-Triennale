@@ -30,50 +30,49 @@ KnapsackSolver::KnapsackSolver(vec3 containerSize, float maxWeight) {
 	this->maxWeight = maxWeight;
 }
 
-vector<Box*> KnapsackSolver::solve3D(vector<Box*> boxes) const {
-	vector<Box*> initialSolution;
-	for (Box* box : boxes) {
-		if (rand() % 2 == 1)
-			initialSolution.push_back(box);
-	}
-	vector<vector<Box*>> solutions;
+vector<pair<Box*, vec3>> KnapsackSolver::solve3D(vector<Box*> boxes) const {
+	vector<Box*> currentSolution = createInitialSolution(boxes, this->maxWeight, this->containerSize);
+	if (currentSolution.size() == boxes.size())
+		return createSolutionFromBoxes(currentSolution);
+	vector<vector<Box*>> solutionsBoxes = { currentSolution };
+	vector<vector<vec3>> solutionsPositions = { getBoxesCoordinates(currentSolution) };
+
 	for (int i = MAX_ITERATIONS; i > 0; i--) {
-		vector<Box*> boxesLeft = getDifference(boxes, initialSolution);
-		if (boxesLeft.size() == 0) {
-			if (getWeight(initialSolution) <= this->maxWeight && fits(initialSolution, this->containerSize))
-				return initialSolution;
-			else
-				continue;
-		}
-		vector<Box*> neighbor = createNeighborSolution(initialSolution, boxesLeft);
-		if (getWeight(neighbor) > this->maxWeight)
+		vector<Box*> boxesLeft = getDifference(boxes, currentSolution);
+		vector<Box*> neighbor = createNeighborSolution(currentSolution, boxesLeft);
+		if (getWeight(neighbor) > this->maxWeight || !fits(neighbor, this->containerSize))
 			continue;
 
-		int initialValue = getProfit(initialSolution);
-		int neighborValue = getProfit(neighbor);
+		int currentProfit = getProfit(currentSolution);
+		int neighborProfit = getProfit(neighbor);
 		bool accept = false;
-		auto it = find(solutions.begin(), solutions.end(), neighbor);
-		if (neighborValue >= initialValue) {
-			if (it != solutions.end() || fits(neighbor, this->containerSize))
-				accept = true;
+		if (neighborProfit >= currentProfit) {
+			accept = true;
 		} else {
 			float p = rand() % 1001 / 1000.0f;
-			int delta = neighborValue - initialValue;
-			if (it != solutions.end() && exp(delta / i) > p)
-				accept = true;
-			else if (exp(delta / i) > p && fits(neighbor, this->containerSize))
+			int delta = neighborProfit - currentProfit;
+			if (exp(delta / i) > p)
 				accept = true;
 		}
 		if (accept) {
-			initialSolution = neighbor;
-			if (it == solutions.end())
-				solutions.push_back(neighbor);
+			currentSolution = neighbor;
+			auto it = find(solutionsBoxes.begin(), solutionsBoxes.end(), neighbor);
+			if (it == solutionsBoxes.end()) {
+				solutionsBoxes.push_back(neighbor);
+				solutionsPositions.push_back(getBoxesCoordinates(neighbor));
+			}
 		}
 	}
-	vector<Box*> max;
-	for (vector<Box*> solution : solutions) {
-		if (getProfit(solution) > getProfit(max))
-			max = solution;
+	vector<Box*> maxBoxes = {};
+	vector<vec3> maxPositions = {};
+	for (int i = 0; i < solutionsBoxes.size(); i++) {
+		if (getProfit(solutionsBoxes[i]) > getProfit(maxBoxes)) {
+			maxBoxes = solutionsBoxes[i];
+			maxPositions = solutionsPositions[i];
+		}
 	}
-	return max;
+	vector<pair<Box*, vec3>> finalSolution;
+	for (int i = 0; i < maxBoxes.size(); i++)
+		finalSolution.push_back({ maxBoxes[i], maxPositions[i] });
+	return finalSolution;
 }

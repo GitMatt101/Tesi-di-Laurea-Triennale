@@ -41,12 +41,9 @@ static bool collides(vector<Box*> placedBoxes, Box* box, vec3 boxPosition, vec3 
 
 int getMaxX(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
 	vector<Box*> px;
-	for (Box* placedBox : placedBoxes) {
-		vec3 pbPos = placedBox->getPosition();
-		vec3 pbSize = placedBox->getSize();
-		if (pbPos.x + pbSize.x <= containerSize.x - box->getSize().x)
-			px.push_back(placedBox);
-	}
+	std::copy_if(placedBoxes.begin(), placedBoxes.end(), std::back_inserter(px), [&containerSize](Box* pBox) {
+		return pBox->getPosition().x + pBox->getSize().x <= containerSize.x - pBox->getSize().x;
+	});
 	int maxX = 0;
 	for (int i = 0; i < px.size(); i++) {
 		int x = px[i]->getPosition().x + px[i]->getSize().x;
@@ -58,12 +55,9 @@ int getMaxX(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
 
 int getMaxY(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
 	vector<Box*> py;
-	for (Box* placedBox : placedBoxes) {
-		vec3 pbPos = placedBox->getPosition();
-		vec3 pbSize = placedBox->getSize();
-		if (pbPos.y + pbSize.y <= containerSize.y - box->getSize().y)
-			py.push_back(placedBox);
-	}
+	std::copy_if(placedBoxes.begin(), placedBoxes.end(), std::back_inserter(py), [&containerSize](Box* pBox) {
+		return pBox->getPosition().y + pBox->getSize().y <= containerSize.y - pBox->getSize().y;
+	});
 	int maxY = 0;
 	for (int i = 0; i < py.size(); i++) {
 		int y = py[i]->getPosition().y + py[i]->getSize().y;
@@ -75,12 +69,9 @@ int getMaxY(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
 
 int getMaxZ(vector<Box*> placedBoxes, Box* box, vec3 containerSize) {
 	vector<Box*> pz;
-	for (Box* placedBox : placedBoxes) {
-		vec3 pbPos = placedBox->getPosition();
-		vec3 pbSize = placedBox->getSize();
-		if (pbPos.z + pbSize.z <= containerSize.z - box->getSize().z)
-			pz.push_back(placedBox);
-	}
+	std::copy_if(placedBoxes.begin(), placedBoxes.end(), std::back_inserter(pz), [&containerSize](Box* pBox) {
+		return pBox->getPosition().z + pBox->getSize().z <= containerSize.z - pBox->getSize().z;
+	});
 	int maxZ = 0;
 	for (int i = 0; i < pz.size(); i++) {
 		int z = pz[i]->getPosition().z + pz[i]->getSize().z;
@@ -165,7 +156,6 @@ bool fits(vector<Box*> placedBoxes, vec3 containerSize) {
 		vec3 c = getCoordinates(boxes, box, containerSize);
 		if (c == vec3(-1))
 			return false;
-		vec3 boxSize = box->getSize();
 		box->setPosition(c);
 		boxes.push_back(box);
 	}
@@ -187,4 +177,49 @@ bool isFlying(vector<Box*> placedBoxes, Box* box, vec3 position) {
 		}
 	}
 	return true;
+}
+
+vector<Box*> createInitialSolution(vector<Box*> boxes, int maxWeight, vec3 containerSize) {
+	vector<Box*> solution;
+	do {
+		solution.clear();
+		for (Box* box : boxes) {
+			if (rand() % 2 == 1)
+				solution.push_back(box);
+		}
+	} while (getWeight(solution) > maxWeight || !fits(solution, containerSize));
+	return solution;
+}
+
+vector<Box*> createNeighborSolution(vector<Box*> currentSolution, vector<Box*> remainingBoxes) {
+	if (currentSolution.size() == 0)
+		return { remainingBoxes[rand() % remainingBoxes.size()] };
+
+	vector<Box*> neighbor = currentSolution;
+	switch (rand() % 3) {
+	case 0:
+		neighbor.erase(neighbor.begin() + rand() % neighbor.size());
+		break;
+	case 1:
+		neighbor.push_back(remainingBoxes[rand() % remainingBoxes.size()]);
+		break;
+	case 2:
+		neighbor[rand() % neighbor.size()] = remainingBoxes[rand() % remainingBoxes.size()];
+		break;
+	}
+	return neighbor;
+}
+
+vector<vec3> getBoxesCoordinates(vector<Box*> boxes) {
+	vector<vec3> coords;
+	for (Box* box : boxes)
+		coords.push_back(box->getPosition());
+	return coords;
+}
+
+vector<pair<Box*, vec3>> createSolutionFromBoxes(vector<Box*> boxes) {
+	vector<pair<Box*, vec3>> solution;
+	for (Box* box : boxes)
+		solution.push_back({ box, box->getPosition() });
+	return solution;
 }

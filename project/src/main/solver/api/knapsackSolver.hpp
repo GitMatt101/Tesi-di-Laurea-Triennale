@@ -20,5 +20,5 @@ class KnapsackSolver {
 		/// </summary>
 		/// <param name="boxes"></param>
 		/// <returns>A vector of boxes chosen among the ones given.</returns>
-		vector<Box*> solve3D(vector<Box*> boxes) const;
+		vector<pair<Box*, vec3>> solve3D(vector<Box*> boxes) const;
 };
