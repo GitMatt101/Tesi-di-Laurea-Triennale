@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <map>
 
-constexpr auto MAX_ITERATIONS = 10000;
+constexpr auto MAX_ITERATIONS = 1000;
 
 static vector<Box*> createNeighborSolution(vector<Box*> currentSolution, vector<Box*> remainingBoxes) {
 	if (currentSolution.size() == 0)

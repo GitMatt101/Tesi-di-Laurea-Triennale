@@ -174,6 +174,17 @@ void Box::moveTowardsTarget() {
 	this->move(xStep, yStep, zStep);
 }
 
+bool Box::startReached() const {
+	return abs(this->xStart - this->x) <= 0.001 && abs(this->yStart - this->y) <= 0.001 && abs(this->zStart - this->z) <= 0.001;
+}
+
+void Box::moveTowardsStart() {
+	float xStep = (this->xStart - this->xTarget) / (FRAME_LENGTH * 3);
+	float yStep = (this->yStart - this->yTarget) / (FRAME_LENGTH * 3);
+	float zStep = (this->zStart - this->zTarget) / (FRAME_LENGTH * 3);
+	this->move(xStep, yStep, zStep);
+}
+
 void Box::setIndices(vector<GLuint> indices) {
 	this->indices = indices;
 }

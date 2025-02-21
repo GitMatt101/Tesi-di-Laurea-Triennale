@@ -23,6 +23,8 @@ class GlutManager {
 		ShadersManager* shadersManager;
 		GLenum polygonMode;
 		GLenum elementsMode;
+		bool pause;
+		bool insert;
 
 		/// <summary>
 		/// Draws the scene.

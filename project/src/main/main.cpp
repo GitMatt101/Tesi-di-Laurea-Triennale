@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 
 		box.first->setPosition(box.second);
 		box.first->setTarget(box.second);
-		box.first->setStartPosition(vec3(box.second.x, box.second.y, rand() % 20 + 10));
+		box.first->setStartPosition(vec3(box.second.x, box.second.y, rand() % 20 + 20));
 		scene.push_back(box.first);
 	}
 	cout << "\nProfit: " << totalProfit << "\tWeight: " << totalWeight << "/" << maxWeight << endl;

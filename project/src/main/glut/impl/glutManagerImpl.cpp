@@ -48,6 +48,8 @@ GlutManager::GlutManager(vector<Box*> boxes) {
 		(char*)"\\src\\shaderFiles\\fragmentShader.glsl"
 	);
 	this->boxes[0]->setIndices(linesIndices);
+	this->pause = false;
+	this->insert = true;
 }
 
 void GlutManager::openWindow(int argc, char** argv) {
@@ -162,6 +164,17 @@ void GlutManager::moveCamera(unsigned char key, int x, int y) {
 			instance->camera->getView()->setTarget(vec3(3.0f, 3.0f, 3.0f));
 			instance->camera->getView()->setPosition(vec3(11.0f, 12.0f, 22.0f));
 			break;
+		case 'p': case 'P':
+			instance->pause = !instance->pause;
+			break;
+		case 'c': case 'C':
+			instance->pause = false;
+			instance->insert = true;
+			break;
+		case 'b': case 'B':
+			instance->pause = false;
+			instance->insert = false;
+			break;
 		case 'm': case 'M':
 			if (instance->polygonMode == GL_FILL) {
 				instance->polygonMode = GL_LINE;
@@ -190,7 +203,7 @@ void GlutManager::moveCamera(unsigned char key, int x, int y) {
 }
 
 void GlutManager::zoomCamera(int wheel, int direction, int x, int y) {
-	instance->camera->getPerspective()->zoom(CAMERA_ZOOM * direction);
+	instance->camera->getPerspective()->zoom(CAMERA_ZOOM * -direction);
 }
 
 void GlutManager::lookAround(int x, int y) {
@@ -226,10 +239,21 @@ void GlutManager::lookAround(int x, int y) {
 }
 
 void GlutManager::update(int value) {
-	for (Box* box : instance->boxes) {
-		if (!box->targetReached()) {
-			box->moveTowardsTarget();
-			break;
+	if (!instance->pause) {
+		if (instance->insert) {
+			for (int i = 0; i < instance->boxes.size(); i++) {
+				if (!instance->boxes[i]->targetReached()) {
+					instance->boxes[i]->moveTowardsTarget();
+					break;
+				}
+			}
+		} else {
+			for (int i = instance->boxes.size() - 1; i >= 0; i--) {
+				if (!instance->boxes[i]->startReached()) {
+					instance->boxes[i]->moveTowardsStart();
+					break;
+				}
+			}
 		}
 	}
 	glutTimerFunc(FRAME_LENGTH, update, 0);

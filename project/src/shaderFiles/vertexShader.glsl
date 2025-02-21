@@ -6,7 +6,6 @@ layout (location = 1) in vec4 aColor;
 uniform mat4 model;
 uniform mat4 projection;
 uniform mat4 view;
-uniform vec3 viewPos;
 
 out vec4 ourColor;
 

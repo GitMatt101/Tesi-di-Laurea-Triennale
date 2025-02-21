@@ -134,6 +134,16 @@ class Box {
 		void moveTowardsTarget();
 
 		/// <summary>
+		/// Checks if the box has arrived to its starting position.
+		/// </summary>
+		bool startReached() const;
+
+		/// <summary>
+		/// Moves towards the starting position.
+		/// </summary>
+		void moveTowardsStart();
+
+		/// <summary>
 		/// Inits VAO and VBOs.
 		/// </summary>
 		void init();

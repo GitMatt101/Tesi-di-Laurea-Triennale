@@ -1,4 +1,5 @@
 #include "../api/perspective.hpp"
+#include <iostream>
 
 Perspective::Perspective(float fov, float width, float height, float nearPlane, float farPlane) {
 	this->fov = fov;
@@ -26,9 +27,8 @@ float Perspective::getFarPlane() const {
 void Perspective::zoom(float zoom) {
 	this->fov += zoom;
 
-	// Limits the perspective if it goes too far or too close
 	if (this->fov < 1.0f)
 		this->fov = 1.0f;
-	if (this->fov > 180.0f)
-		this->fov = 180.0f;
+	if (this->fov > 120.0f)
+		this->fov = 120.0f;
 }
